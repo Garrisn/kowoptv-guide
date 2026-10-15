@@ -300,6 +300,64 @@ body.theme-toon .guide { margin: 0 8px; }
 /* Text on accent-colored chips (logo, badges, ticker label) */
 body .brand .logo, body .badge.solid, body .crawl .lbl, body .linkbtn { color: var(--on-accent, #000); }
 
+
+/* ---------- Parody ads ---------- */
+.ad {
+  position: relative; overflow: hidden; display: flex; flex-direction: column;
+  background: #fff; color: #111; border: 2px solid var(--accent); border-radius: var(--radius);
+}
+.ad-body { flex: 1; min-height: 0; display: grid; place-items: center; overflow: hidden; }
+.ad-body img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+.ad-tag {
+  position: absolute; left: 4px; bottom: 3px; z-index: 2;
+  font: 700 9px/1 Arial, sans-serif; letter-spacing: .5px; text-transform: uppercase;
+  background: rgba(0,0,0,.6); color: #fff; padding: 2px 4px; border-radius: 2px; pointer-events: none;
+}
+.ad-x {
+  position: absolute; right: 3px; top: 3px; z-index: 3; width: 20px; height: 20px; padding: 0;
+  border: 0; border-radius: 50%; background: rgba(0,0,0,.65); color: #fff; cursor: pointer;
+  font: 700 15px/20px Arial, sans-serif; text-align: center;
+}
+.ad-x:hover { background: rgba(0,0,0,.85); }
+.ad-text { padding: 10px 28px; text-align: center; font-family: Arial, sans-serif; }
+.ad-text b { display: block; font-size: 18px; margin-bottom: 4px; }
+.ad-cap { flex: none; font: 700 12px/1.2 Arial, sans-serif; padding: 3px 6px; text-align: center; background: var(--accent); color: var(--on-accent, #000); }
+.ad.swap .ad-body { animation: adIn .35s ease-out; }
+@keyframes adIn { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .ad.swap .ad-body { animation: none; } }
+
+/* Slot 1: details panel */
+.info.has-ad { grid-template-columns: 150px 1fr auto 240px; }
+.ad-info { height: 100%; min-height: 0; }
+
+/* Slot 2: banner rows in the channel grid */
+.row.adrow { height: calc(var(--rowh) * 1.9); }
+.adrow .ad { flex: 1; background: #111; color: #fff; }
+
+/* Slot 3: fake old-Windows pop-up */
+.ad-pop {
+  position: fixed; right: 16px; bottom: 44px; width: 250px; height: 230px; z-index: 40;
+  background: #c0c0c0; border: 2px outset #fff; border-radius: 0; box-shadow: 4px 4px 0 rgba(0,0,0,.45);
+  padding: 0 3px 3px;
+}
+.ad-pop .ad-title {
+  flex: none; margin: 3px 0; height: 20px; padding: 0 26px 0 5px;
+  background: linear-gradient(90deg, #000080, #1084d0); color: #fff;
+  font: 700 12px/20px Tahoma, Arial, sans-serif; white-space: nowrap; overflow: hidden;
+}
+.ad-pop .ad-x {
+  top: 5px; right: 5px; width: 18px; height: 16px; border-radius: 0;
+  background: #c0c0c0; color: #000; border: 2px outset #fff; font: 700 11px/11px Tahoma, Arial, sans-serif;
+}
+.ad-pop .ad-body { background: #fff; border: 2px inset #fff; }
+.ad-pop .ad-tag { bottom: 6px; left: 7px; }
+
+@media (max-width: 760px) {
+  .info.has-ad { grid-template-columns: 1fr; }
+  .ad-info { display: none; }
+  .ad-pop { width: 170px; height: 160px; right: 8px; }
+}
+
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
@@ -959,6 +1017,9 @@ function render() {
     const logo = ch.icon ? `<span class="lg"><img src="${esc(ch.icon)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>` : "";
     rows += `<div class="row" data-ch="${i}"><div class="ch${i === state.focus.ch ? " focused" : ""}" data-ch="${i}" title="${esc(ch.number + " " + ch.name)}">` +
       `<span class="n">${esc(ch.number || "•")}</span>${logo}<span class="nm">${esc(ch.name)}</span></div><div class="progs">${cells}</div></div>`;
+    if (ADS.length && ((i + 1) % 6 === 0 || i === state.channels.length - 1)) {
+      rows += `<div class="row adrow">${adFrame("grid", "ad-grid")}</div>`;
+    }
   });
 
   const inner = $("#rowsInner");
@@ -976,6 +1037,7 @@ function render() {
   updateNowLine();
   renderInfo();
   renderCrawl();
+  placeAds();
 }
 
 function updateNowLine() {
@@ -1316,12 +1378,104 @@ document.addEventListener("keydown", (e) => {
 let resizeT;
 window.addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(render, 150); });
 
+
+/* ---------------- Parody ads ---------------- */
+// Ads live in ads/ (next to index.html) and are listed in ads/ads.json:
+//   [{ "src": "ads/name.gif", "alt": "short description", "caption": "optional" }, ...]
+// Three slots each rotate every 6–10 s on their own timer; changes are kept at least
+// AD_MIN_GAP ms apart so no two slots ever switch at the same moment.
+let ADS = [];
+const AD_SLOTS = ["info", "grid", "popup"];
+const AD_MIN_GAP = 800;
+const adState = Object.fromEntries(AD_SLOTS.map((s) => [s, { i: -1, next: 0, timer: 0 }]));
+
+function adFrame(slot, extraClass) {
+  const title = slot === "popup" ? `<div class="ad-title">!!! SPECIAL OFFER !!!</div>` : "";
+  return `<div class="ad ${extraClass}" data-slot="${slot}">${title}` +
+    `<button type="button" class="ad-x" aria-label="Close ad" title="Close">×</button>` +
+    `<span class="ad-tag">Ad · Parody</span><div class="ad-body"></div></div>`;
+}
+function adContent(ad) {
+  if (!ad) return "";
+  const body = ad.src
+    ? `<img src="${esc(ad.src)}" alt="${esc(ad.alt || ad.caption || "Advertisement")}">`
+    : `<div class="ad-text"><b>${esc(ad.title || "")}</b>${esc(ad.text || "")}</div>`;
+  return body + (ad.caption ? `<div class="ad-cap">${esc(ad.caption)}</div>` : "");
+}
+// Fill every element for a slot (the grid slot can appear in several rows).
+function paintAdSlot(slot, animate) {
+  const html = adContent(ADS[adState[slot].i]);
+  for (const el of document.querySelectorAll(`.ad[data-slot="${slot}"]`)) {
+    const body = el.querySelector(".ad-body");
+    if (body.dataset.i === String(adState[slot].i) && !animate) continue;
+    body.innerHTML = html;
+    body.dataset.i = adState[slot].i;
+    if (animate) { el.classList.remove("swap"); void el.offsetWidth; el.classList.add("swap"); }
+  }
+}
+function pickAd(slot) {
+  const all = ADS.map((_, i) => i);
+  const busy = new Set(AD_SLOTS.filter((s) => s !== slot).map((s) => adState[s].i));
+  let pool = all.filter((i) => i !== adState[slot].i && !busy.has(i));
+  if (!pool.length) pool = all.filter((i) => i !== adState[slot].i);
+  if (!pool.length) pool = all;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+// Next change time: random within 6–10 s, never within AD_MIN_GAP of another slot's change.
+function scheduleAd(slot) {
+  const now = Date.now();
+  const others = AD_SLOTS.filter((s) => s !== slot).map((s) => adState[s].next);
+  const ok = (t) => others.every((o) => Math.abs(o - t) >= AD_MIN_GAP);
+  const candidates = [];
+  for (let d = 6000; d <= 10000; d += 50) if (ok(now + d)) candidates.push(now + d);
+  let t = candidates.length ? candidates[Math.floor(Math.random() * candidates.length)] : now + 10000;
+  while (!ok(t)) t += 50;
+  adState[slot].next = t;
+  clearTimeout(adState[slot].timer);
+  adState[slot].timer = setTimeout(() => {
+    adState[slot].i = pickAd(slot);
+    paintAdSlot(slot, true);
+    scheduleAd(slot);
+  }, t - now);
+}
+// Called after every render, since the grid and details panel are rebuilt.
+function placeAds() {
+  if (!ADS.length) return;
+  const info = $("#info");
+  if (!info.querySelector(".ad-info") && window.innerWidth >= 760) {
+    info.insertAdjacentHTML("beforeend", adFrame("info", "ad-info"));
+  }
+  info.classList.toggle("has-ad", !!info.querySelector(".ad-info"));
+  for (const s of AD_SLOTS) paintAdSlot(s, false);
+}
+async function loadAds() {
+  try {
+    const res = await fetch("ads/ads.json", { cache: "no-store" });
+    if (!res.ok) return;
+    const list = await res.json();
+    // Only local images in ads/ (or text-only ads) are allowed.
+    ADS = (Array.isArray(list) ? list : []).filter((a) =>
+      a && (a.src ? /^ads\/[\w.-]+\.(png|jpe?g|gif|webp)$/i.test(a.src) : a.title || a.text));
+  } catch { ADS = []; }
+  if (!ADS.length) return;
+  document.body.insertAdjacentHTML("beforeend", adFrame("popup", "ad-pop"));
+  AD_SLOTS.forEach((s, n) => { adState[s].i = n % ADS.length; });
+  render();
+  // Stagger the first changes so the slots start out of step.
+  for (const s of AD_SLOTS) scheduleAd(s);
+}
+// The close buttons are decorative. They do nothing. The ads stay.
+document.addEventListener("click", (e) => {
+  if (e.target.closest(".ad-x")) { e.preventDefault(); e.stopPropagation(); }
+}, true);
+
 /* ---------------- Boot ---------------- */
 updateClock();
 render();
 requestAnimationFrame(tick);
 (async () => {
   await loadFromServer();
+  loadAds();
   scheduleRefresh();
 })();
 })();
