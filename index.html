@@ -624,7 +624,7 @@ function isMovie(p) { return p.cats.some((c) => /movie|film/i.test(c)); }
 // publisher script on the home server. On GitHub Pages the location is worked out
 // from the page address: https://OWNER.github.io/REPO/ -> OWNER/REPO, branch "data".
 // Set DATA_URL to override.
-const DATA_URL = "";
+const DATA_URL = "https://raw.githubusercontent.com/Garrisn/kowoptv-guide/data/guide.xml";
 function dataUrl() {
   if (DATA_URL) return DATA_URL;
   const host = location.hostname;
