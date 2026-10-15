@@ -685,7 +685,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
     <label class="check"><input type="checkbox" id="fAuto"> Auto-scroll channels like a preview channel</label>
     <label class="check"><input type="checkbox" id="fCrawl"> Show "On Now" crawl</label>
     <label class="check"><input type="checkbox" id="f24"> 24-hour clock</label>
-    <label class="check"><input type="checkbox" id="fIdle"> Idle pop-ups (open after 15 seconds without interaction)</label>
+    <label class="check"><input type="checkbox" id="fIdle"> Idle pop-ups (open after 11 seconds without interaction)</label>
     <details class="colors" id="colorBox">
       <summary>Colors</summary>
       <div class="cgrid" id="cgrid"></div>
@@ -1517,10 +1517,10 @@ document.addEventListener("click", (e) => {
 }, true);
 
 /* ---------------- Idle pop-ups ---------------- */
-// After ~15 s with no interaction, pop-up windows start opening one after another at
+// After ~11 s with no interaction, pop-up windows start opening one after another at
 // random spots. Their × really closes them, and nothing is saved, so a refresh clears
 // them all. Any interaction stops new ones; going idle again starts them again.
-const IDLE_MS = 15000;
+const IDLE_MS = 11000;
 const IDLE_MAX = 200; // never more than this many open at once
 const IDLE_TITLES = [
   "!!! SPECIAL OFFER !!!", "Are you still watching?", "CONGRATULATIONS!!!",
