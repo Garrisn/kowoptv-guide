@@ -666,7 +666,7 @@ function applyData(channels, generatedAt) {
   const idx = channels.findIndex((c) => c.id === prevId);
   state.focus.ch = idx >= 0 ? idx : Math.min(state.focus.ch, Math.max(0, channels.length - 1));
   const known = isFinite(generatedAt);
-  const stale = known && Date.now() - generatedAt > 3 * 3600000;
+  const stale = known && Date.now() - generatedAt > 26 * 3600000; // published daily
   const when = known ? `${dayLabel(generatedAt)} ${fmtTime(generatedAt)}` : fmtTime(Date.now());
   setStatus(`KoWOPTV · ${channels.length} channels · ${stale ? "schedule may be out of date — last updated" : "updated"} ${when}`, stale ? "demo" : "");
   render();
