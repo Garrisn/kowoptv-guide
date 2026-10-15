@@ -1,0 +1,9 @@
+# Schedule data lives on the "data" branch, published by the home server.
+guide.xml
+
+# Never commit secrets or local tooling
+token
+*.token
+.env
+.claude/
+state/

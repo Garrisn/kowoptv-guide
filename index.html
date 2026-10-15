@@ -1,0 +1,1097 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://raw.githubusercontent.com; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>KoWOPTV Guide</title>
+<style>
+:root {
+  --chw: 150px;
+  --rowh: 62px;
+  --gap: 0px;
+  --radius: 0px;
+  --font: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+}
+
+/* ---------- Theme: 90s cable preview channel ---------- */
+body.theme-prevue {
+  --page-bg: #050c3a;
+  --top-bg: linear-gradient(#0a1a6e, #061253);
+  --top-fg: #fff;
+  --accent: #ffe14d;
+  --info-bg: linear-gradient(180deg, #0d2287 0%, #071660 100%);
+  --info-fg: #fff;
+  --muted: #a9b8ff;
+  --time-bg: #000;
+  --time-fg: #ffe14d;
+  --ch-bg: linear-gradient(180deg, #13289c, #0a1a72);
+  --ch-fg: #fff;
+  --ch-num: #ffe14d;
+  --row-bg: #0b1b6e;
+  --cell-bg: linear-gradient(180deg, #2147d0 0%, #1534a8 55%, #10288a 100%);
+  --cell-fg: #fff;
+  --cell-sub: #c9d4ff;
+  --cell-border: #5f80ff;
+  --focus-bg: linear-gradient(180deg, #fff27a, #f2c80f);
+  --focus-fg: #0a0a30;
+  --nowline: #ff3b3b;
+  --progress: rgba(255,225,77,.85);
+  --crawl-bg: #000;
+  --crawl-fg: #fff;
+  --font: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+  --text-shadow: 2px 2px 0 rgba(0,0,0,.7);
+}
+
+/* ---------- Theme: print magazine ---------- */
+body.theme-print {
+  --page-bg: #efe8d6;
+  --top-bg: #efe8d6;
+  --top-fg: #111;
+  --accent: #d2161e;
+  --info-bg: #fffdf6;
+  --info-fg: #111;
+  --muted: #5d574a;
+  --time-bg: #111;
+  --time-fg: #fff;
+  --ch-bg: #fffdf6;
+  --ch-fg: #111;
+  --ch-num: #111;
+  --row-bg: #efe8d6;
+  --cell-bg: #fffdf6;
+  --cell-fg: #111;
+  --cell-sub: #5d574a;
+  --cell-border: #1a1a1a;
+  --focus-bg: #ffe680;
+  --focus-fg: #111;
+  --nowline: #d2161e;
+  --progress: #d2161e;
+  --crawl-bg: #d2161e;
+  --crawl-fg: #fff;
+  --font: "Libre Franklin", "Franklin Gothic Medium", Arial, sans-serif;
+  --text-shadow: none;
+}
+
+/* ---------- Theme: modern streaming ---------- */
+body.theme-modern {
+  --page-bg: #0d0f14;
+  --top-bg: #0d0f14;
+  --top-fg: #f2f4f8;
+  --accent: #4d8dff;
+  --info-bg: linear-gradient(120deg, #1a2030, #11151f);
+  --info-fg: #f2f4f8;
+  --muted: #8e97aa;
+  --time-bg: #0d0f14;
+  --time-fg: #b8c0d2;
+  --ch-bg: #161a23;
+  --ch-fg: #e6e9f0;
+  --ch-num: #8e97aa;
+  --row-bg: #0d0f14;
+  --cell-bg: #1b2030;
+  --cell-fg: #eef1f7;
+  --cell-sub: #8e97aa;
+  --cell-border: transparent;
+  --focus-bg: #2f6fed;
+  --focus-fg: #fff;
+  --nowline: #ff4d6a;
+  --progress: #4d8dff;
+  --crawl-bg: #161a23;
+  --crawl-fg: #b8c0d2;
+  --font: "Inter", "Segoe UI", system-ui, sans-serif;
+  --text-shadow: none;
+  --gap: 3px;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--page-bg);
+  color: var(--info-fg);
+  font-family: var(--font);
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, select { font: inherit; }
+
+#app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+/* ---------- Top bar ---------- */
+.topbar {
+  display: flex; align-items: center; gap: 14px;
+  padding: 8px 16px;
+  background: var(--top-bg); color: var(--top-fg);
+  flex: none;
+}
+.brand { display: flex; align-items: center; gap: 8px; font-weight: 900; font-size: 22px; letter-spacing: .5px; }
+.brand .logo {
+  background: var(--accent); color: #000; padding: 2px 8px; border-radius: 4px;
+  font-size: 18px; letter-spacing: 1px;
+}
+body.theme-print .brand .logo { color: #fff; border-radius: 0; padding: 4px 10px; font-size: 20px; }
+body.theme-print .topbar { border-bottom: 4px double #111; }
+body.theme-modern .brand .logo { color: #fff; }
+.status {
+  font-size: 13px; padding: 3px 10px; border-radius: 999px;
+  background: rgba(127,127,127,.18); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  max-width: 40vw;
+}
+.status::before { content: "●"; margin-right: 6px; color: var(--dot, #3ccf6e); }
+.status.demo { --dot: #ffb020; }
+.status.err { --dot: #ff4d4d; }
+.spacer { flex: 1; }
+.clock { font-weight: 700; font-size: 24px; font-variant-numeric: tabular-nums; text-shadow: var(--text-shadow); white-space: nowrap; }
+body.theme-prevue .clock { color: var(--accent); }
+.iconbtn {
+  background: rgba(127,127,127,.18); color: inherit; border: 0; border-radius: 6px;
+  width: 36px; height: 36px; cursor: pointer; font-size: 18px; line-height: 1;
+  display: inline-grid; place-items: center;
+}
+.iconbtn:hover { background: rgba(127,127,127,.32); }
+
+/* ---------- Info panel ---------- */
+.info {
+  flex: none; display: grid; grid-template-columns: 150px 1fr auto; gap: 18px;
+  padding: 14px 18px; min-height: 168px; max-height: 168px;
+  background: var(--info-bg); color: var(--info-fg);
+  border-top: 2px solid var(--cell-border); border-bottom: 2px solid var(--cell-border);
+  overflow: hidden;
+}
+body.theme-modern .info { margin: 0 12px 10px; border-radius: 14px; border: 0; }
+body.theme-print .info { border: 0; border-bottom: 3px solid #111; }
+.info .chbox {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: rgba(0,0,0,.22); border-radius: var(--radius); padding: 8px; text-align: center; min-width: 0;
+}
+body.theme-print .info .chbox { background: none; border: 2px solid #111; }
+.info .chbox img { max-width: 110px; max-height: 64px; object-fit: contain; }
+.info .chbox.poster { padding: 0; gap: 4px; background: none; border: 0; }
+.info .chbox.poster img { max-width: 100%; max-height: 112px; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.4); }
+.info .chbox .num { font-size: 40px; font-weight: 900; line-height: 1; color: var(--ch-num); text-shadow: var(--text-shadow); }
+.info .chbox .name { font-size: 13px; font-weight: 700; opacity: .9; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.info .main { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.info .title { font-size: 30px; font-weight: 900; line-height: 1.1; text-shadow: var(--text-shadow); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+body.theme-print .info .title { font-size: 28px; }
+.info .meta { font-size: 15px; color: var(--muted); display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; }
+body.theme-prevue .info .meta { color: var(--accent); font-weight: 700; }
+.info .desc { font-size: 16px; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.badge {
+  display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  padding: 2px 6px; border: 1.5px solid currentColor; border-radius: 3px; line-height: 1.2;
+}
+.badge.solid { background: var(--accent); color: #000; border-color: var(--accent); }
+body.theme-print .badge.solid, body.theme-modern .badge.solid { color: #fff; }
+.info .side { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 8px; min-width: 150px; }
+.info .remaining { font-size: 14px; color: var(--muted); text-align: right; }
+.bar { width: 150px; height: 6px; background: rgba(127,127,127,.3); border-radius: 3px; overflow: hidden; }
+.bar > i { display: block; height: 100%; background: var(--progress); }
+.linkbtn {
+  background: var(--accent); color: #000; border: 0; border-radius: 6px; padding: 7px 12px;
+  font-weight: 700; cursor: pointer; font-size: 13px; white-space: nowrap;
+}
+body.theme-print .linkbtn, body.theme-modern .linkbtn { color: #fff; }
+
+/* ---------- Guide grid ---------- */
+.guide { flex: 1; display: flex; flex-direction: column; min-height: 0; position: relative; }
+body.theme-modern .guide { margin: 0 12px; }
+.timebar {
+  flex: none; display: flex; height: 38px;
+  background: var(--time-bg); color: var(--time-fg);
+  font-weight: 700; font-size: 17px; text-shadow: var(--text-shadow);
+}
+.timebar .corner {
+  width: var(--chw); flex: none; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 4px; font-size: 14px; border-right: 2px solid var(--cell-border);
+}
+body.theme-modern .timebar .corner { border-right: 0; }
+.timebar .corner button {
+  background: none; border: 0; color: inherit; cursor: pointer; font-size: 16px; padding: 4px 8px; border-radius: 4px;
+}
+.timebar .corner button:hover { background: rgba(127,127,127,.3); }
+.slots { flex: 1; position: relative; overflow: hidden; }
+.slots .slot {
+  position: absolute; top: 0; bottom: 0; display: flex; align-items: center; padding-left: 8px;
+  border-left: 2px solid var(--cell-border); white-space: nowrap;
+}
+body.theme-modern .slots .slot { border-left: 1px solid #2a3040; font-weight: 600; font-size: 14px; }
+body.theme-print .slots .slot { border-left-color: #fff; text-transform: uppercase; letter-spacing: .5px; font-size: 15px; }
+
+.rows { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; background: var(--row-bg); }
+.rows::-webkit-scrollbar { display: none; }
+.row { display: flex; height: var(--rowh); margin-bottom: var(--gap); }
+.ch {
+  width: var(--chw); flex: none; display: flex; align-items: center; gap: 8px; padding: 0 8px;
+  background: var(--ch-bg); color: var(--ch-fg);
+  border: 1px solid var(--cell-border); border-right-width: 2px;
+  border-radius: var(--radius); margin-right: var(--gap);
+  overflow: hidden; cursor: pointer;
+}
+.ch .n { font-weight: 900; font-size: 22px; color: var(--ch-num); text-shadow: var(--text-shadow); min-width: 34px; text-align: center; }
+.ch .lg { width: 52px; height: 36px; flex: none; display: grid; place-items: center; }
+.ch .lg img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.ch .nm { font-size: 13px; font-weight: 700; line-height: 1.15; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; text-shadow: var(--text-shadow); }
+.ch.focused { outline: 3px solid var(--accent); outline-offset: -3px; }
+body.theme-print .ch .n { border: 2px solid #111; padding: 0 4px; font-size: 19px; }
+
+.progs { flex: 1; position: relative; min-width: 0; }
+.cell {
+  position: absolute; top: 0; bottom: 0;
+  padding: 0 var(--gap) 0 0;
+  cursor: pointer;
+}
+.cell > .in {
+  height: 100%; position: relative; overflow: hidden;
+  background: var(--cell-bg); color: var(--cell-fg);
+  border: 1px solid var(--cell-border); border-radius: var(--radius);
+  padding: 7px 10px; display: flex; flex-direction: column; justify-content: center; gap: 2px;
+}
+body.theme-prevue .cell > .in { border-top-color: #8aa2ff; border-left-color: #8aa2ff; border-bottom-color: #081a66; border-right-color: #081a66; border-width: 2px; }
+.cell .t { font-weight: 700; font-size: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: var(--text-shadow); }
+.cell .s { font-size: 13px; color: var(--cell-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell .tag { font-size: 10px; padding: 0 4px; margin-left: 6px; vertical-align: 2px; text-shadow: none; }
+.cell.cl > .in { padding-left: 22px; }
+.cell.cr > .in { padding-right: 22px; }
+.cell.cl > .in::before, .cell.cr > .in::after {
+  position: absolute; top: 50%; transform: translateY(-50%); font-size: 14px; opacity: .85;
+}
+.cell.cl > .in::before { content: "◂"; left: 6px; }
+.cell.cr > .in::after { content: "▸"; right: 6px; }
+.cell .pb { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--progress); }
+body.theme-prevue .cell .pb, body.theme-print .cell .pb { display: none; }
+.cell.past > .in { opacity: .55; }
+.cell:hover > .in { filter: brightness(1.15); }
+body.theme-print .cell:hover > .in { filter: none; background: #f7f0da; }
+.cell.focused > .in { background: var(--focus-bg); color: var(--focus-fg); }
+.cell.focused .t { text-shadow: none; }
+.cell.focused .s { color: inherit; opacity: .8; }
+body.theme-modern .cell.focused > .in { box-shadow: 0 0 0 2px #9fc0ff inset; }
+
+.nowline {
+  position: absolute; top: 38px; bottom: 0; width: 2px; background: var(--nowline);
+  pointer-events: none; z-index: 3; box-shadow: 0 0 6px var(--nowline);
+}
+.nowline::before {
+  content: ""; position: absolute; top: -6px; left: -5px;
+  border: 6px solid transparent; border-top-color: var(--nowline);
+}
+.empty {
+  padding: 40px 20px; text-align: center; color: var(--muted); font-size: 18px;
+}
+
+/* ---------- Crawl ---------- */
+.crawl { flex: none; height: 32px; overflow: hidden; background: var(--crawl-bg); color: var(--crawl-fg); font-weight: 700; font-size: 16px; display: flex; align-items: center; }
+.crawl.hide { display: none; }
+.crawl .lbl { flex: none; padding: 0 12px; height: 100%; display: flex; align-items: center; background: var(--accent); color: #000; font-weight: 900; letter-spacing: 1px; z-index: 1; }
+body.theme-print .crawl .lbl { background: #111; color: #fff; }
+body.theme-modern .crawl .lbl { color: #fff; }
+.crawl .track { flex: 1; overflow: hidden; position: relative; height: 100%; }
+.crawl .txt { position: absolute; white-space: nowrap; top: 50%; transform: translate(0,-50%); animation: crawl linear infinite; padding-left: 100%; }
+.crawl .txt b { color: var(--accent); margin-right: 6px; }
+body.theme-print .crawl .txt b { color: #ffe680; }
+@keyframes crawl { from { transform: translate(0,-50%); } to { transform: translate(-100%,-50%); } }
+
+/* ---------- Settings dialog ---------- */
+dialog {
+  border: 0; border-radius: 12px; padding: 0; width: min(520px, calc(100vw - 32px));
+  background: #fff; color: #111; font-family: "Inter", system-ui, sans-serif;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+dialog::backdrop { background: rgba(0,0,0,.6); }
+dialog form { padding: 20px; display: grid; gap: 14px; }
+dialog h2 { margin: 0; font-size: 20px; }
+dialog label { display: grid; gap: 4px; font-size: 13px; font-weight: 600; color: #444; }
+dialog input[type=text], dialog input[type=url], dialog input[type=number], dialog select {
+  padding: 8px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px; color: #111; background: #fff;
+}
+dialog .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+dialog .check { display: flex; align-items: center; gap: 8px; font-weight: 500; color: #222; }
+dialog .hint { font-size: 12px; color: #666; font-weight: 400; }
+dialog .actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+dialog .actions .left { margin-right: auto; display: flex; gap: 8px; }
+dialog button { padding: 8px 14px; border-radius: 6px; border: 1px solid #ccc; background: #f4f4f4; cursor: pointer; font-size: 14px; }
+dialog button.primary { background: #2f6fed; color: #fff; border-color: #2f6fed; }
+dialog .err { background: #fff1f0; border: 1px solid #ffccc7; color: #a8071a; padding: 8px 10px; border-radius: 6px; font-size: 13px; }
+dialog .err:empty { display: none; }
+dialog { max-height: calc(100dvh - 32px); overflow: auto; }
+dialog .colors { border: 1px solid #ddd; border-radius: 8px; }
+dialog .colors summary { padding: 10px 12px; cursor: pointer; font-weight: 600; font-size: 14px; }
+dialog .cgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 14px; padding: 4px 12px 12px; }
+dialog .cgrid label { display: flex; align-items: center; gap: 8px; font-weight: 500; color: #222; font-size: 13px; }
+dialog .cgrid input[type=color] { width: 34px; height: 26px; padding: 0; border: 1px solid #ccc; border-radius: 4px; background: none; cursor: pointer; flex: none; }
+dialog .cgrid label.custom::after { content: "\2022"; color: #2f6fed; font-weight: 900; }
+dialog .cactions { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 0 12px 12px; font-size: 12px; color: #666; }
+@media (max-width: 500px) { dialog .cgrid { grid-template-columns: 1fr; } }
+kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; font-size: 12px; }
+
+.toast {
+  position: fixed; left: 50%; bottom: 48px; transform: translateX(-50%);
+  background: rgba(0,0,0,.85); color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 14px;
+  z-index: 50; opacity: 0; transition: opacity .2s; pointer-events: none; font-family: "Inter", system-ui, sans-serif;
+}
+.toast.show { opacity: 1; }
+
+@media (max-width: 760px) {
+  :root { --chw: 92px; --rowh: 56px; }
+  .ch .lg { display: none; }
+  .ch { flex-direction: column; justify-content: center; gap: 0; padding: 0 4px; }
+  .ch .n { font-size: 18px; }
+  .ch .nm { font-size: 11px; -webkit-line-clamp: 1; text-align: center; }
+  .info { grid-template-columns: 1fr; min-height: 0; max-height: 190px; padding: 10px 16px; }
+  .info .chbox, .info .side { display: none; }
+  .info .title { font-size: 22px; }
+  .info .desc { font-size: 14px; -webkit-line-clamp: 2; }
+  .clock { font-size: 18px; }
+  .status { display: none; }
+  .brand { font-size: 18px; }
+  .topbar { padding: 8px 16px; gap: 8px; }
+  .cell .t { font-size: 15px; }
+  .timebar { font-size: 14px; }
+  .timebar .corner { font-size: 12px; }
+}
+</style>
+</head>
+<body class="theme-prevue">
+<div id="app">
+  <header class="topbar">
+    <div class="brand"><span class="logo">WTV</span><span>GUIDE</span></div>
+    <div class="status" id="status">Loading…</div>
+    <div class="spacer"></div>
+    <div class="clock" id="clock"></div>
+    <button class="iconbtn" id="fsBtn" title="Fullscreen (F)">⛶</button>
+    <button class="iconbtn" id="setBtn" title="Settings (S)">⚙</button>
+  </header>
+
+  <section class="info" id="info"></section>
+
+  <section class="guide">
+    <div class="timebar">
+      <div class="corner">
+        <button id="prevBtn" title="Earlier">◂</button>
+        <span id="dateLbl"></span>
+        <button id="nextBtn" title="Later">▸</button>
+      </div>
+      <div class="slots" id="slots"></div>
+    </div>
+    <div class="rows" id="rows"><div id="rowsInner"></div></div>
+    <div class="nowline" id="nowline"></div>
+  </section>
+
+  <footer class="crawl" id="crawl">
+    <div class="lbl">ON NOW</div>
+    <div class="track"><div class="txt" id="crawlTxt"></div></div>
+  </footer>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" id="form">
+    <h2>Guide settings</h2>
+    <div class="err" id="fErr"></div>
+    <div class="row2">
+      <label>Look
+        <select id="fTheme">
+          <option value="prevue">90s cable preview channel</option>
+          <option value="print">Print magazine</option>
+          <option value="modern">Modern streaming</option>
+        </select>
+      </label>
+      <label>Hours shown
+        <select id="fHours">
+          <option value="1">1 hour</option>
+          <option value="1.5">1½ hours</option>
+          <option value="2">2 hours</option>
+          <option value="3">3 hours</option>
+          <option value="4">4 hours</option>
+        </select>
+      </label>
+    </div>
+    <div class="row2">
+      <label>Refresh data every (minutes)
+        <input type="number" id="fRefresh" min="1" max="120">
+      </label>
+      <label>Scroll speed (px/sec)
+        <input type="number" id="fSpeed" min="5" max="200">
+      </label>
+    </div>
+    <label class="check"><input type="checkbox" id="fAuto"> Auto-scroll channels like a preview channel</label>
+    <label class="check"><input type="checkbox" id="fCrawl"> Show "On Now" crawl</label>
+    <label class="check"><input type="checkbox" id="f24"> 24-hour clock</label>
+    <details class="colors" id="colorBox">
+      <summary>Colors</summary>
+      <div class="cgrid" id="cgrid"></div>
+      <div class="cactions"><span>Changes preview live and are saved for the current look. A dot marks a custom color.</span><button type="button" id="cReset">Reset to defaults</button></div>
+    </details>
+    <div class="hint">Keys: <kbd>↑</kbd><kbd>↓</kbd> channels · <kbd>←</kbd><kbd>→</kbd> programs · <kbd>PgUp</kbd><kbd>PgDn</kbd> page · <kbd>N</kbd> now · <kbd>A</kbd> auto-scroll · <kbd>F</kbd> fullscreen · <kbd>S</kbd> settings</div>
+    <div class="actions">
+      <button value="cancel">Close</button>
+      <button value="save" class="primary" id="fSave">Save</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+"use strict";
+
+const $ = (s) => document.querySelector(s);
+const SLOT = 30 * 60000;
+const LS_KEY = "etvguide.settings.v1";
+const DEFAULTS = {
+  server: "",
+  theme: "prevue",
+  hours: 2,
+  refresh: 10,
+  speed: 30,
+  autoscroll: false,
+  crawl: true,
+  h24: false,
+  colors: {},           // { themeName: { '--css-var': '#hex' } }
+};
+
+let settings = loadSettings();
+const state = {
+  channels: [],          // [{id, number, name, icon, progs:[...]}]
+  sourceLabel: "",
+  sourceKind: "",        // live | file | demo
+  winStart: floorSlot(Date.now()),
+  live: true,
+  focus: { ch: 0, t: Date.now() },
+  dup: false,
+};
+
+/* ---------------- Settings ---------------- */
+function loadSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+    return Object.assign({}, DEFAULTS, s);
+  } catch { return Object.assign({}, DEFAULTS); }
+}
+function saveSettings() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(settings)); } catch {}
+}
+
+/* ---------------- Utils ---------------- */
+function floorSlot(t) { return Math.floor(t / SLOT) * SLOT; }
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+function winLen() {
+  const h = window.innerWidth < 760 ? Math.min(settings.hours, 1.5) : settings.hours;
+  return h * 3600000;
+}
+function fmtTime(t, short) {
+  const d = new Date(t);
+  if (settings.h24) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+  let h = d.getHours(), m = d.getMinutes();
+  const ap = h >= 12 ? "PM" : "AM";
+  h = h % 12 || 12;
+  const mm = String(m).padStart(2, "0");
+  return short ? `${h}:${mm}` : `${h}:${mm} ${ap}`;
+}
+function fmtRange(a, b) {
+  if (settings.h24) return `${fmtTime(a)} – ${fmtTime(b)}`;
+  const sameAp = new Date(a).getHours() >= 12 === new Date(b).getHours() >= 12;
+  return `${fmtTime(a, sameAp)} – ${fmtTime(b)}`;
+}
+function fmtDur(ms) {
+  const m = Math.round(ms / 60000);
+  if (m < 60) return `${m} min`;
+  const h = Math.floor(m / 60), r = m % 60;
+  return r ? `${h} hr ${r} min` : `${h} hr`;
+}
+function dayLabel(t) {
+  const d = new Date(t), today = new Date();
+  const dd = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const diff = Math.round((dd(d) - dd(today)) / 86400000);
+  if (diff === 0) return "Today";
+  if (diff === 1) return "Tomorrow";
+  if (diff === -1) return "Yesterday";
+  return d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+}
+let toastTimer;
+function toast(msg) {
+  const el = $("#toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+/* ---------------- XMLTV parsing ---------------- */
+function parseXmltvTime(s) {
+  const m = /^(\d{4})(\d{2})(\d{2})(\d{2})?(\d{2})?(\d{2})?\s*([+-]\d{2}:?\d{2}|Z)?/.exec((s || "").trim());
+  if (!m) return NaN;
+  const [, Y, Mo, D, h = "00", mi = "00", se = "00", tz] = m;
+  if (!tz) return new Date(+Y, +Mo - 1, +D, +h, +mi, +se).getTime();
+  let t = Date.UTC(+Y, +Mo - 1, +D, +h, +mi, +se);
+  if (tz !== "Z") {
+    const z = tz.replace(":", "");
+    const off = (z[0] === "-" ? -1 : 1) * (+z.slice(1, 3) * 60 + +z.slice(3, 5));
+    t -= off * 60000;
+  }
+  return t;
+}
+
+function parseXmltv(text) {
+  const doc = new DOMParser().parseFromString(text, "text/xml");
+  if (doc.querySelector("parsererror")) throw new Error("The file isn't valid XMLTV.");
+  const root = doc.documentElement;
+  if (!root || root.nodeName !== "tv") throw new Error("No <tv> root element found — is this an XMLTV file?");
+
+  const txt = (el, sel) => { const n = el.querySelector(sel); return n ? n.textContent.trim() : ""; };
+  const byId = new Map();
+  const channels = [];
+
+  for (const c of root.querySelectorAll(":scope > channel")) {
+    const id = c.getAttribute("id");
+    const names = [...c.querySelectorAll("display-name")].map((n) => n.textContent.trim()).filter(Boolean);
+    let number = names.find((n) => /^\d+(\.\d+)?$/.test(n)) || "";
+    if (!number) {
+      const m = /^C?(\d+(?:\.\d+)?)/.exec(id || "");
+      if (m) number = m[1];
+    }
+    let name = names.find((n) => !/^\d+(\.\d+)?$/.test(n) && !(number && n.startsWith(number + " ")));
+    if (!name) {
+      const withNum = names.find((n) => number && n.startsWith(number + " "));
+      name = withNum ? withNum.slice(number.length + 1) : (names[0] || id);
+    }
+    const icon = c.querySelector("icon")?.getAttribute("src") || "";
+    const ch = { id, number, name, icon, progs: [] };
+    byId.set(id, ch);
+    channels.push(ch);
+  }
+
+  for (const p of root.querySelectorAll(":scope > programme")) {
+    const chId = p.getAttribute("channel");
+    let ch = byId.get(chId);
+    if (!ch) {
+      ch = { id: chId, number: "", name: chId, icon: "", progs: [] };
+      byId.set(chId, ch);
+      channels.push(ch);
+    }
+    const start = parseXmltvTime(p.getAttribute("start"));
+    const stop = parseXmltvTime(p.getAttribute("stop"));
+    if (!isFinite(start) || !isFinite(stop) || stop <= start) continue;
+    let epNs = "", epOn = "";
+    for (const e of p.querySelectorAll("episode-num")) {
+      const sys = e.getAttribute("system");
+      if (sys === "xmltv_ns") epNs = e.textContent.trim();
+      else if (sys === "onscreen" || !epOn) epOn = e.textContent.trim();
+    }
+    ch.progs.push({
+      start, stop,
+      title: txt(p, "title") || "To Be Announced",
+      sub: txt(p, "sub-title"),
+      desc: txt(p, "desc"),
+      cats: [...p.querySelectorAll("category")].map((n) => n.textContent.trim()).filter(Boolean),
+      date: txt(p, "date"),
+      rating: txt(p, "rating > value"),
+      stars: txt(p, "star-rating > value"),
+      epNs, epOn,
+      isNew: !!p.querySelector("new"),
+      icon: p.querySelector("icon")?.getAttribute("src") || "",
+    });
+  }
+
+  for (const ch of channels) ch.progs.sort((a, b) => a.start - b.start);
+  channels.sort((a, b) => {
+    const na = parseFloat(a.number), nb = parseFloat(b.number);
+    if (isFinite(na) && isFinite(nb) && na !== nb) return na - nb;
+    if (isFinite(na) !== isFinite(nb)) return isFinite(na) ? -1 : 1;
+    return a.name.localeCompare(b.name);
+  });
+  return channels;
+}
+
+function epLabel(p) {
+  if (p.epNs) {
+    const parts = p.epNs.split(".");
+    const s = parseInt(parts[0], 10), e = parseInt(parts[1], 10);
+    let out = "";
+    if (!isNaN(s)) out += "S" + (s + 1);
+    if (!isNaN(e)) out += (out ? " " : "") + "E" + (e + 1);
+    if (out) return out;
+  }
+  return p.epOn || "";
+}
+function isMovie(p) { return p.cats.some((c) => /movie|film/i.test(c)); }
+
+/* ---------------- Data loading ---------------- */
+// The schedule is published (sanitized) to this repo's "data" branch by the
+// publisher script on the home server. On GitHub Pages the location is worked out
+// from the page address: https://OWNER.github.io/REPO/ -> OWNER/REPO, branch "data".
+// Set DATA_URL to override.
+const DATA_URL = "";
+function dataUrl() {
+  if (DATA_URL) return DATA_URL;
+  const host = location.hostname;
+  if (host.endsWith(".github.io")) {
+    const owner = host.slice(0, -".github.io".length);
+    const seg = location.pathname.split("/")[1] || "";
+    const repo = seg && !seg.includes(".") ? seg : host;
+    return `https://raw.githubusercontent.com/${owner}/${repo}/data/guide.xml`;
+  }
+  return "guide.xml"; // local testing: guide.xml next to index.html
+}
+
+let retryTimer;
+async function loadFromServer() {
+  clearTimeout(retryTimer);
+  const url = dataUrl();
+  try {
+    const bust = (url.includes("?") ? "&" : "?") + "t=" + Math.floor(Date.now() / 300000);
+    const res = await fetch(url + bust, { cache: "no-store", signal: AbortSignal.timeout?.(15000) });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const text = await res.text();
+    const channels = parseXmltv(text);
+    if (!channels.length) throw new Error("no channels in schedule");
+    const gen = /<tv\b[^>]*\bdate="([^"]+)"/.exec(text);
+    applyData(channels, gen ? parseXmltvTime(gen[1]) : NaN);
+    return true;
+  } catch (err) {
+    console.warn("Guide load failed:", err);
+    setStatus(state.channels.length ? "Couldn't refresh — showing last schedule" : "Schedule unavailable — retrying…", "err");
+    retryTimer = setTimeout(loadFromServer, 60000);
+    return false;
+  }
+}
+
+function applyData(channels, generatedAt) {
+  const prevId = state.channels[state.focus.ch]?.id;
+  state.channels = channels;
+  state.sourceKind = "live";
+  const idx = channels.findIndex((c) => c.id === prevId);
+  state.focus.ch = idx >= 0 ? idx : Math.min(state.focus.ch, Math.max(0, channels.length - 1));
+  const known = isFinite(generatedAt);
+  const stale = known && Date.now() - generatedAt > 3 * 3600000;
+  const when = known ? `${dayLabel(generatedAt)} ${fmtTime(generatedAt)}` : fmtTime(Date.now());
+  setStatus(`KoWOPTV · ${channels.length} channels · ${stale ? "schedule may be out of date — last updated" : "updated"} ${when}`, stale ? "demo" : "");
+  render();
+}
+
+function setStatus(text, cls) {
+  const el = $("#status");
+  el.textContent = text;
+  el.className = "status " + (cls || "");
+  el.title = text;
+}
+
+/* ---------------- Rendering ---------------- */
+function progAt(ch, t) {
+  const ps = ch.progs;
+  let lo = 0, hi = ps.length - 1;
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1;
+    if (ps[mid].stop <= t) lo = mid + 1;
+    else if (ps[mid].start > t) hi = mid - 1;
+    else return ps[mid];
+  }
+  return null;
+}
+function focusedProg() {
+  const ch = state.channels[state.focus.ch];
+  if (!ch) return null;
+  const t = Math.min(Math.max(state.focus.t, state.winStart), state.winStart + winLen() - 1);
+  return progAt(ch, t);
+}
+
+function render() {
+  if (!$("#dlg").open) applyColors(settings.theme, settings.colors[settings.theme]);
+  $("#crawl").classList.toggle("hide", !settings.crawl);
+  const now = Date.now();
+  const ws = state.winStart, wl = winLen(), we = ws + wl;
+
+  // time slots
+  let slotHtml = "";
+  for (let t = ws; t < we; t += SLOT) {
+    slotHtml += `<div class="slot" style="left:${((t - ws) / wl) * 100}%">${esc(fmtTime(t))}</div>`;
+  }
+  $("#slots").innerHTML = slotHtml;
+  $("#dateLbl").textContent = dayLabel(ws);
+
+  const fp = focusedProg();
+  let rows = "";
+  state.channels.forEach((ch, i) => {
+    let cells = "";
+    for (const p of ch.progs) {
+      if (p.stop <= ws) continue;
+      if (p.start >= we) break;
+      const a = Math.max(p.start, ws), b = Math.min(p.stop, we);
+      const cls = ["cell"];
+      if (p.start < ws) cls.push("cl");
+      if (p.stop > we) cls.push("cr");
+      if (p.stop <= now) cls.push("past");
+      if (i === state.focus.ch && p === fp) cls.push("focused");
+      const movie = isMovie(p);
+      const tag = p.isNew ? `<span class="badge tag">New</span>` : movie ? `<span class="badge tag">Movie</span>` : "";
+      const sub = movie ? [p.date, p.rating].filter(Boolean).join(" · ") : (p.sub || epLabel(p));
+      let pb = "";
+      if (p.start <= now && now < p.stop) pb = `<i class="pb" style="width:${((now - a) / (b - a)) * 100}%"></i>`;
+      cells += `<div class="${cls.join(" ")}" style="left:${((a - ws) / wl) * 100}%;width:${((b - a) / wl) * 100}%" data-ch="${i}" data-t="${p.start}" title="${esc(p.title)}${p.sub ? " — " + esc(p.sub) : ""}">` +
+        `<div class="in"><span class="t">${esc(p.title)}${tag}</span>${sub ? `<span class="s">${esc(sub)}</span>` : ""}${pb}</div></div>`;
+    }
+    const logo = ch.icon ? `<span class="lg"><img src="${esc(ch.icon)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>` : "";
+    rows += `<div class="row" data-ch="${i}"><div class="ch${i === state.focus.ch ? " focused" : ""}" data-ch="${i}" title="${esc(ch.number + " " + ch.name)}">` +
+      `<span class="n">${esc(ch.number || "•")}</span>${logo}<span class="nm">${esc(ch.name)}</span></div><div class="progs">${cells}</div></div>`;
+  });
+
+  const inner = $("#rowsInner");
+  if (!state.channels.length) {
+    inner.innerHTML = `<div class="empty">Loading schedule…</div>`;
+    state.dup = false;
+  } else {
+    inner.innerHTML = rows;
+    // For seamless auto-scroll, render the list twice when it overflows.
+    const box = $("#rows");
+    state.dup = settings.autoscroll && inner.scrollHeight > box.clientHeight;
+    if (state.dup) inner.innerHTML = rows + rows;
+  }
+
+  updateNowLine();
+  renderInfo();
+  renderCrawl();
+}
+
+function updateNowLine() {
+  const now = Date.now(), ws = state.winStart, wl = winLen();
+  const f = (now - ws) / wl;
+  const line = $("#nowline");
+  if (f < 0 || f > 1 || !state.channels.length) { line.style.display = "none"; return; }
+  line.style.display = "";
+  line.style.left = `calc(var(--chw) + var(--gap) + (100% - var(--chw) - var(--gap)) * ${f})`;
+}
+
+function renderInfo() {
+  const ch = state.channels[state.focus.ch];
+  const el = $("#info");
+  if (!ch) { el.innerHTML = `<div></div><div class="main"><div class="title">KoWOPTV Guide</div><div class="desc">Loading schedule…</div></div><div></div>`; return; }
+  const p = focusedProg();
+  const now = Date.now();
+  const chbox = `<div class="chbox">${ch.icon ? `<img src="${esc(ch.icon)}" alt="" onerror="this.remove()">` : ""}<div class="num">${esc(ch.number)}</div><div class="name">${esc(ch.name)}</div></div>`;
+  if (!p) {
+    el.innerHTML = `${chbox}<div class="main"><div class="title">No information</div><div class="desc">Nothing is scheduled on ${esc(ch.name)} at this time.</div></div><div class="side"></div>`;
+    return;
+  }
+  const movie = isMovie(p);
+  const posterBox = p.icon
+    ? `<div class="chbox poster"><img src="${esc(p.icon)}" alt="" onerror="this.remove()"><div class="name">${esc(ch.number)} ${esc(ch.name)}</div></div>`
+    : chbox;
+  const meta = [];
+  meta.push(`<span>${esc(fmtRange(p.start, p.stop))}</span>`);
+  meta.push(`<span>${esc(fmtDur(p.stop - p.start))}</span>`);
+  if (movie && p.date) meta.push(`<span>${esc(p.date.slice(0, 4))}</span>`);
+  const ep = epLabel(p);
+  if (ep) meta.push(`<span>${esc(ep)}</span>`);
+  if (p.rating) meta.push(`<span class="badge">${esc(p.rating)}</span>`);
+  if (p.stars) meta.push(`<span>${esc(starText(p.stars))}</span>`);
+  if (p.isNew) meta.push(`<span class="badge solid">New</span>`);
+  if (movie) meta.push(`<span class="badge solid">Movie</span>`);
+  const cats = p.cats.filter((c) => !/movie/i.test(c)).slice(0, 3);
+  if (cats.length) meta.push(`<span>${esc(cats.join(" / "))}</span>`);
+
+  let side = "";
+  if (p.start <= now && now < p.stop) {
+    const pct = ((now - p.start) / (p.stop - p.start)) * 100;
+    side = `<span class="badge solid">On now</span><div><div class="remaining">${esc(fmtDur(p.stop - now))} left</div><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+  } else if (p.start > now) {
+    side = `<span class="badge">${p.start - now < 86400000 ? "Starts in " + esc(fmtDur(p.start - now)) : esc(dayLabel(p.start))}</span><div></div>`;
+  } else {
+    side = `<span class="badge">Aired</span><div></div>`;
+  }
+
+  const subtitle = p.sub && !movie ? `<span style="color:inherit;font-weight:700">“${esc(p.sub)}”</span>` : "";
+  el.innerHTML = `${posterBox}<div class="main"><div class="title">${esc(p.title)}</div>` +
+    `<div class="meta">${subtitle}${meta.join("")}</div>` +
+    `<div class="desc">${esc(p.desc || "No description available.")}</div></div>` +
+    `<div class="side">${side}</div>`;
+}
+function starText(v) {
+  const m = /^([\d.]+)\s*\/\s*([\d.]+)$/.exec(v);
+  if (!m) return v;
+  const n = Math.round((+m[1] / +m[2]) * 4 * 2) / 2;
+  return "★".repeat(Math.floor(n)) + (n % 1 ? "½" : "");
+}
+
+let lastCrawl = "";
+function renderCrawl() {
+  if (!settings.crawl) return;
+  const now = Date.now();
+  const parts = [];
+  for (const ch of state.channels) {
+    const p = progAt(ch, now);
+    if (p) parts.push(`<b>${esc(ch.number)} ${esc(ch.name)}</b>${esc(p.title)}`);
+  }
+  const html = parts.join(" &nbsp;&nbsp;•&nbsp;&nbsp; ");
+  if (html === lastCrawl) return;
+  lastCrawl = html;
+  const el = $("#crawlTxt");
+  el.innerHTML = html;
+  el.style.animationDuration = Math.max(20, (el.scrollWidth || 2000) / 90) + "s";
+}
+
+/* ---------------- Navigation ---------------- */
+let pausedUntil = 0;
+function pauseAuto(ms = 30000) { pausedUntil = performance.now() + ms; }
+
+function shiftWindow(slots) {
+  state.winStart += slots * SLOT;
+  state.live = state.winStart === floorSlot(Date.now());
+  state.focus.t = Math.min(Math.max(state.focus.t, state.winStart), state.winStart + winLen() - 1);
+  render();
+}
+function goNow() {
+  state.winStart = floorSlot(Date.now());
+  state.live = true;
+  state.focus.t = Date.now();
+  render();
+  scrollToFocus();
+}
+function scrollToFocus() {
+  const row = document.querySelector(`#rowsInner .row[data-ch="${state.focus.ch}"]`);
+  if (row) row.scrollIntoView({ block: "nearest" });
+}
+function moveChannel(d) {
+  const n = state.channels.length;
+  if (!n) return;
+  state.focus.ch = Math.max(0, Math.min(n - 1, state.focus.ch + d));
+  render();
+  scrollToFocus();
+}
+function moveProgram(d) {
+  const ch = state.channels[state.focus.ch];
+  if (!ch) return;
+  const cur = focusedProg();
+  const wl = winLen();
+  let target;
+  if (d > 0) {
+    const t = cur ? cur.stop : Math.max(state.focus.t, state.winStart) + SLOT;
+    target = progAt(ch, t) || { start: t, stop: t + SLOT };
+  } else {
+    const t = (cur ? Math.max(cur.start, state.winStart) : state.focus.t) - 1;
+    target = progAt(ch, t) || { start: floorSlot(t), stop: floorSlot(t) + SLOT };
+  }
+  while (target.start >= state.winStart + wl) state.winStart += SLOT;
+  while (target.stop <= state.winStart) state.winStart -= SLOT;
+  state.live = state.winStart === floorSlot(Date.now());
+  state.focus.t = Math.max(target.start, state.winStart);
+  render();
+}
+function rowsPerPage() {
+  const rh = document.querySelector("#rowsInner .row")?.offsetHeight || 62;
+  return Math.max(1, Math.floor($("#rows").clientHeight / rh) - 1);
+}
+
+/* ---------------- Auto-scroll loop ---------------- */
+let lastTs = 0, scrollPos = 0;
+function tick(ts) {
+  const dt = lastTs ? Math.min(100, ts - lastTs) : 0;
+  lastTs = ts;
+  const box = $("#rows");
+  if (settings.autoscroll && state.dup && ts > pausedUntil && !$("#dlg").open) {
+    scrollPos += (dt / 1000) * settings.speed;
+    const half = $("#rowsInner").scrollHeight / 2;
+    if (scrollPos >= half) scrollPos -= half;
+    box.scrollTop = scrollPos;
+  } else {
+    scrollPos = box.scrollTop;
+  }
+  requestAnimationFrame(tick);
+}
+
+/* ---------------- Clock & periodic updates ---------------- */
+function updateClock() {
+  const d = new Date();
+  const time = settings.h24
+    ? d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })
+    : fmtTime(d.getTime());
+  $("#clock").textContent = `${d.toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" })}  ${time}`;
+}
+let lastMinute = -1;
+setInterval(() => {
+  updateClock();
+  const now = Date.now();
+  const minute = Math.floor(now / 60000);
+  if (minute !== lastMinute) {
+    lastMinute = minute;
+    if (state.live && floorSlot(now) !== state.winStart) {
+      state.winStart = floorSlot(now);
+      if (state.focus.t < now) state.focus.t = now;
+    }
+    render();
+  } else {
+    updateNowLine();
+  }
+}, 1000);
+
+let refreshTimer;
+function scheduleRefresh() {
+  clearInterval(refreshTimer);
+  refreshTimer = setInterval(() => {
+    loadFromServer();
+  }, Math.max(1, settings.refresh) * 60000);
+}
+
+/* ---------------- Settings dialog ---------------- */
+function openSettings() {
+  $("#fTheme").value = settings.theme;
+  $("#fHours").value = String(settings.hours);
+  $("#fRefresh").value = settings.refresh;
+  $("#fSpeed").value = settings.speed;
+  $("#fAuto").checked = settings.autoscroll;
+  $("#fCrawl").checked = settings.crawl;
+  $("#f24").checked = settings.h24;
+  draftColors = JSON.parse(JSON.stringify(settings.colors || {}));
+  buildColorPickers();
+  if (!$("#dlg").open) $("#dlg").showModal();
+}
+function readForm() {
+  settings.theme = $("#fTheme").value;
+  settings.hours = parseFloat($("#fHours").value) || 2;
+  settings.refresh = Math.max(1, parseInt($("#fRefresh").value, 10) || 10);
+  settings.speed = Math.max(5, parseInt($("#fSpeed").value, 10) || 30);
+  settings.autoscroll = $("#fAuto").checked;
+  settings.crawl = $("#fCrawl").checked;
+  settings.h24 = $("#f24").checked;
+  settings.colors = draftColors;
+  saveSettings();
+}
+/* ---------------- Custom colors ---------------- */
+const COLOR_PARTS = [
+  ["--page-bg", "Page background"], ["--top-bg", "Top bar"], ["--top-fg", "Top bar text"],
+  ["--accent", "Logo & highlights"], ["--info-bg", "Details panel"], ["--info-fg", "Details text"],
+  ["--muted", "Details info line"], ["--time-bg", "Time bar"], ["--time-fg", "Time bar text"],
+  ["--ch-bg", "Channel boxes"], ["--ch-fg", "Channel names"], ["--ch-num", "Channel numbers"],
+  ["--row-bg", "Grid background"], ["--cell-bg", "Program boxes"], ["--cell-fg", "Program titles"],
+  ["--cell-sub", "Episode names"], ["--cell-border", "Grid lines"], ["--focus-bg", "Selected program"],
+  ["--focus-fg", "Selected program text"], ["--nowline", "Current-time line"], ["--progress", "Progress bars"],
+  ["--crawl-bg", "Ticker background"], ["--crawl-fg", "Ticker text"],
+];
+let draftColors = {};
+
+function applyColors(theme, colors) {
+  const st = document.body.style;
+  for (const [v] of COLOR_PARTS) st.removeProperty(v);
+  document.body.className = "theme-" + theme;
+  for (const [v, c] of Object.entries(colors || {})) st.setProperty(v, c);
+}
+// First color in a CSS value (handles gradients, rgb(a) and short hex) as #rrggbb.
+function toHex(val) {
+  const m = /#([0-9a-f]{3,8})\b|rgba?\(([^)]*)\)/i.exec(val || "");
+  if (!m) return "#000000";
+  if (m[1]) {
+    let h = m[1];
+    if (h.length <= 4) h = [...h.slice(0, 3)].map((c) => c + c).join("");
+    return "#" + h.slice(0, 6).toLowerCase();
+  }
+  const [r, g, b] = m[2].split(/[\s,\/]+/).map((n) => Math.round(parseFloat(n)) || 0);
+  return "#" + [r, g, b].map((n) => Math.max(0, Math.min(255, n)).toString(16).padStart(2, "0")).join("");
+}
+function buildColorPickers() {
+  const theme = $("#fTheme").value;
+  const custom = draftColors[theme] || {};
+  applyColors(theme, {});
+  const cs = getComputedStyle(document.body);
+  const defs = Object.fromEntries(COLOR_PARTS.map(([v]) => [v, toHex(cs.getPropertyValue(v))]));
+  applyColors(theme, custom);
+  $("#cgrid").innerHTML = COLOR_PARTS.map(([v, label]) =>
+    `<label class="${custom[v] ? "custom" : ""}"><input type="color" data-var="${v}" value="${custom[v] || defs[v]}"> ${label}</label>`
+  ).join("");
+}
+$("#cgrid").addEventListener("input", (e) => {
+  const v = e.target.dataset.var;
+  if (!v) return;
+  const theme = $("#fTheme").value;
+  (draftColors[theme] ||= {})[v] = e.target.value;
+  e.target.parentNode.classList.add("custom");
+  applyColors(theme, draftColors[theme]);
+});
+$("#cReset").addEventListener("click", () => {
+  delete draftColors[$("#fTheme").value];
+  buildColorPickers();
+});
+$("#fTheme").addEventListener("change", buildColorPickers);
+$("#fSave").addEventListener("click", async (e) => {
+  e.preventDefault();
+  readForm();
+  lastCrawl = "";
+  render();
+  scheduleRefresh();
+  $("#dlg").close();
+});
+$("#dlg").addEventListener("close", () => {
+  if ($("#dlg").returnValue === "cancel") applyColors(settings.theme, settings.colors[settings.theme]);
+});
+
+/* ---------------- Events ---------------- */
+$("#setBtn").onclick = openSettings;
+$("#fsBtn").onclick = toggleFullscreen;
+$("#prevBtn").onclick = () => shiftWindow(-1);
+$("#nextBtn").onclick = () => shiftWindow(1);
+
+function toggleFullscreen() {
+  if (document.fullscreenElement) document.exitFullscreen();
+  else document.documentElement.requestFullscreen?.();
+}
+
+$("#rows").addEventListener("click", (e) => {
+  const cell = e.target.closest(".cell");
+  const chEl = e.target.closest(".ch");
+  pauseAuto();
+  if (cell) {
+    state.focus.ch = +cell.dataset.ch;
+    state.focus.t = Math.max(+cell.dataset.t, state.winStart);
+    render();
+  } else if (chEl) {
+    state.focus.ch = +chEl.dataset.ch;
+    state.focus.t = Math.max(Date.now(), state.winStart);
+    render();
+  }
+});
+$("#rows").addEventListener("wheel", () => pauseAuto(), { passive: true });
+$("#rows").addEventListener("touchstart", () => pauseAuto(), { passive: true });
+
+document.addEventListener("keydown", (e) => {
+  if ($("#dlg").open || e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key;
+  const handled = () => { e.preventDefault(); pauseAuto(); };
+  switch (k) {
+    case "ArrowUp": handled(); moveChannel(-1); break;
+    case "ArrowDown": handled(); moveChannel(1); break;
+    case "ArrowLeft": handled(); moveProgram(-1); break;
+    case "ArrowRight": handled(); moveProgram(1); break;
+    case "PageUp": handled(); moveChannel(-rowsPerPage()); break;
+    case "PageDown": handled(); moveChannel(rowsPerPage()); break;
+    case "Home": handled(); state.focus.ch = 0; render(); scrollToFocus(); break;
+    case "End": handled(); state.focus.ch = state.channels.length - 1; render(); scrollToFocus(); break;
+    case "n": case "N": handled(); goNow(); break;
+    case "f": case "F": e.preventDefault(); toggleFullscreen(); break;
+    case "s": case "S": e.preventDefault(); openSettings(); break;
+    case "a": case "A":
+      e.preventDefault();
+      settings.autoscroll = !settings.autoscroll;
+      saveSettings();
+      pausedUntil = 0;
+      render();
+      toast(settings.autoscroll ? "Auto-scroll on" : "Auto-scroll off");
+      break;
+  }
+});
+
+let resizeT;
+window.addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(render, 150); });
+
+/* ---------------- Boot ---------------- */
+updateClock();
+render();
+requestAnimationFrame(tick);
+(async () => {
+  await loadFromServer();
+  scheduleRefresh();
+})();
+})();
+</script>
+</body>
+</html>
