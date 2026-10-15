@@ -105,6 +105,201 @@ body.theme-modern {
   --radius: 8px;
 }
 
+
+/* ---------- Theme: 2000s TV listings channel ---------- */
+body.theme-tvgchannel {
+  --page-bg: #120a2e; --top-bg: linear-gradient(#3a1d7a, #1e0f4a); --top-fg: #fff;
+  --accent: #ff9a1f; --on-accent: #1a0b00;
+  --info-bg: linear-gradient(135deg, #2b1660, #170b3a); --info-fg: #fff; --muted: #c7b8ff;
+  --time-bg: linear-gradient(#ffb347, #ff8a00); --time-fg: #1a0b00;
+  --ch-bg: linear-gradient(#4a2a96, #2b1766); --ch-fg: #fff; --ch-num: #ffb347;
+  --row-bg: #120a2e; --cell-bg: linear-gradient(180deg, #5b3bb0 0%, #3d2486 50%, #2c1868 100%);
+  --cell-fg: #fff; --cell-sub: #d6ccff; --cell-border: #7c5fd6;
+  --focus-bg: linear-gradient(#ffd27a, #ff9a1f); --focus-fg: #1a0b00;
+  --nowline: #00e1ff; --progress: #ff9a1f; --crawl-bg: #000; --crawl-fg: #fff;
+  --font: "Trebuchet MS", Arial, sans-serif; --text-shadow: 1px 1px 0 rgba(0,0,0,.6);
+  --gap: 2px; --radius: 4px;
+}
+body.theme-tvgchannel .timebar { text-shadow: none; }
+
+/* ---------- Theme: digital cable box ---------- */
+body.theme-cablebox {
+  --page-bg: #000; --top-bg: linear-gradient(#2b2f36, #16181c); --top-fg: #e8ecf2;
+  --accent: #3fa9f5; --on-accent: #fff;
+  --info-bg: linear-gradient(#22262d, #121418); --info-fg: #e8ecf2; --muted: #9aa4b2;
+  --time-bg: linear-gradient(#3a3f48, #24282e); --time-fg: #e8ecf2;
+  --ch-bg: linear-gradient(#30353d, #1d2025); --ch-fg: #e8ecf2; --ch-num: #3fa9f5;
+  --row-bg: #0b0c0e; --cell-bg: linear-gradient(180deg, #3b414b 0%, #2a2e35 100%);
+  --cell-fg: #f2f4f7; --cell-sub: #9aa4b2; --cell-border: #4b525e;
+  --focus-bg: linear-gradient(180deg, #5cc0ff, #1f84d6); --focus-fg: #fff;
+  --nowline: #ff3b30; --progress: #3fa9f5; --crawl-bg: #16181c; --crawl-fg: #e8ecf2;
+  --font: Tahoma, Verdana, sans-serif; --text-shadow: 0 1px 1px rgba(0,0,0,.6);
+  --gap: 2px; --radius: 3px;
+}
+
+/* ---------- Theme: newspaper listings ---------- */
+body.theme-newspaper {
+  --page-bg: #f4f1ea; --top-bg: #f4f1ea; --top-fg: #111;
+  --accent: #111; --on-accent: #f4f1ea;
+  --info-bg: #fbf9f4; --info-fg: #111; --muted: #555;
+  --time-bg: #f4f1ea; --time-fg: #111;
+  --ch-bg: #fbf9f4; --ch-fg: #111; --ch-num: #111;
+  --row-bg: #f4f1ea; --cell-bg: #fbf9f4; --cell-fg: #111; --cell-sub: #555; --cell-border: #b9b3a6;
+  --focus-bg: #e9e2cf; --focus-fg: #000;
+  --nowline: #8b0000; --progress: #111; --crawl-bg: #111; --crawl-fg: #f4f1ea;
+  --font: Georgia, "Times New Roman", serif; --text-shadow: none;
+}
+body.theme-newspaper .topbar { border-bottom: 4px double #111; }
+body.theme-newspaper .timebar { border-bottom: 2px solid #111; font-style: italic; }
+body.theme-newspaper .info { border: 0; border-bottom: 1px solid #111; }
+
+/* ---------- Theme: teletext ---------- */
+body.theme-teletext {
+  --page-bg: #000; --top-bg: #0000c8; --top-fg: #ffff00;
+  --accent: #ffff00; --on-accent: #000;
+  --info-bg: #000; --info-fg: #fff; --muted: #00ffff;
+  --time-bg: #ffff00; --time-fg: #0000c8;
+  --ch-bg: #000; --ch-fg: #00ffff; --ch-num: #ffff00;
+  --row-bg: #000; --cell-bg: #000; --cell-fg: #fff; --cell-sub: #00ff00; --cell-border: #0000c8;
+  --focus-bg: #00ffff; --focus-fg: #000;
+  --nowline: #ff0000; --progress: #ff00ff; --crawl-bg: #0000c8; --crawl-fg: #ffff00;
+  --font: "Courier New", Consolas, monospace; --text-shadow: none;
+}
+body.theme-teletext .info .title, body.theme-teletext .cell .t { text-transform: uppercase; letter-spacing: 1px; }
+
+/* ---------- Theme: green / amber CRT terminals ---------- */
+body.theme-phosphor {
+  --page-bg: #020a03; --top-bg: #020a03; --top-fg: #33ff66;
+  --accent: #33ff66; --on-accent: #021a06;
+  --info-bg: #031206; --info-fg: #33ff66; --muted: #1fae45;
+  --time-bg: #031206; --time-fg: #33ff66;
+  --ch-bg: #020a03; --ch-fg: #33ff66; --ch-num: #7dff9b;
+  --row-bg: #020a03; --cell-bg: #031206; --cell-fg: #33ff66; --cell-sub: #1fae45; --cell-border: #1f7a35;
+  --focus-bg: #33ff66; --focus-fg: #021a06;
+  --nowline: #b6ffc8; --progress: #33ff66; --crawl-bg: #031206; --crawl-fg: #33ff66;
+  --font: Consolas, "Lucida Console", "Courier New", monospace;
+  --text-shadow: 0 0 6px rgba(51,255,102,.55);
+}
+body.theme-amber {
+  --page-bg: #0d0800; --top-bg: #0d0800; --top-fg: #ffb000;
+  --accent: #ffb000; --on-accent: #1a1000;
+  --info-bg: #160e00; --info-fg: #ffb000; --muted: #b87d00;
+  --time-bg: #160e00; --time-fg: #ffb000;
+  --ch-bg: #0d0800; --ch-fg: #ffb000; --ch-num: #ffd27a;
+  --row-bg: #0d0800; --cell-bg: #160e00; --cell-fg: #ffb000; --cell-sub: #b87d00; --cell-border: #7a5200;
+  --focus-bg: #ffb000; --focus-fg: #1a1000;
+  --nowline: #ffe0a0; --progress: #ffb000; --crawl-bg: #160e00; --crawl-fg: #ffb000;
+  --font: Consolas, "Lucida Console", "Courier New", monospace;
+  --text-shadow: 0 0 6px rgba(255,176,0,.5);
+}
+body.theme-phosphor::after, body.theme-amber::after {
+  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 100;
+  background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 3px);
+}
+body.theme-phosphor .cell.focused .t, body.theme-amber .cell.focused .t { text-shadow: none; }
+
+/* ---------- Theme: 70s wood panel ---------- */
+body.theme-seventies {
+  --page-bg: #2b1a0e; --top-bg: linear-gradient(#5a3518, #3d230f); --top-fg: #fbe9c6;
+  --accent: #f2a93b; --on-accent: #2b1a0e;
+  --info-bg: linear-gradient(#4a2c14, #331d0c); --info-fg: #fbe9c6; --muted: #e0b77a;
+  --time-bg: #c4561b; --time-fg: #fbe9c6;
+  --ch-bg: linear-gradient(#7a4520, #5c3216); --ch-fg: #fbe9c6; --ch-num: #f2a93b;
+  --row-bg: #2b1a0e; --cell-bg: linear-gradient(180deg, #9a5a24, #7a431a);
+  --cell-fg: #fff3dc; --cell-sub: #f1cf9a; --cell-border: #3d230f;
+  --focus-bg: linear-gradient(#ffd27a, #f2a93b); --focus-fg: #2b1a0e;
+  --nowline: #ff4d2e; --progress: #f2a93b; --crawl-bg: #c4561b; --crawl-fg: #fbe9c6;
+  --font: "Cooper Black", "Cooper Std", Georgia, serif; --text-shadow: 1px 1px 0 rgba(0,0,0,.45);
+  --gap: 3px; --radius: 10px;
+}
+
+/* ---------- Theme: 80s neon ---------- */
+body.theme-synthwave {
+  --page-bg: #0f0221; --top-bg: linear-gradient(90deg, #1a0336, #2d0659); --top-fg: #ffe6ff;
+  --accent: #ff2bd6; --on-accent: #fff;
+  --info-bg: linear-gradient(135deg, #240447, #12022a); --info-fg: #ffe6ff; --muted: #6fe7ff;
+  --time-bg: #12022a; --time-fg: #6fe7ff;
+  --ch-bg: #1a0336; --ch-fg: #ffe6ff; --ch-num: #ff2bd6;
+  --row-bg: #0f0221; --cell-bg: linear-gradient(180deg, #2a0a52, #1a0336);
+  --cell-fg: #fff; --cell-sub: #6fe7ff; --cell-border: #ff2bd6;
+  --focus-bg: linear-gradient(90deg, #ff2bd6, #7a2bff); --focus-fg: #fff;
+  --nowline: #00f0ff; --progress: #00f0ff; --crawl-bg: #12022a; --crawl-fg: #ff9af0;
+  --font: "Trebuchet MS", "Segoe UI", sans-serif; --text-shadow: 0 0 6px rgba(255,43,214,.6);
+  --gap: 3px; --radius: 6px;
+}
+body.theme-synthwave .cell > .in { box-shadow: 0 0 8px rgba(255,43,214,.25) inset; }
+
+/* ---------- Theme: Y2K glossy ---------- */
+body.theme-aero {
+  --page-bg: linear-gradient(160deg, #0b3a66, #06182b); --top-bg: rgba(255,255,255,.06); --top-fg: #eaf6ff;
+  --accent: #7fd4ff; --on-accent: #04223b;
+  --info-bg: linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,.04)); --info-fg: #fff; --muted: #a9d8f5;
+  --time-bg: rgba(0,0,0,.25); --time-fg: #d4efff;
+  --ch-bg: linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,.06)); --ch-fg: #fff; --ch-num: #7fd4ff;
+  --row-bg: transparent;
+  --cell-bg: linear-gradient(180deg, rgba(255,255,255,.22) 0%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.04) 100%);
+  --cell-fg: #fff; --cell-sub: #bfe6ff; --cell-border: rgba(255,255,255,.28);
+  --focus-bg: linear-gradient(180deg, #bdf0ff, #4fb8f0); --focus-fg: #04223b;
+  --nowline: #9dff6b; --progress: #7fd4ff; --crawl-bg: rgba(0,0,0,.3); --crawl-fg: #d4efff;
+  --font: "Segoe UI", "Trebuchet MS", sans-serif; --text-shadow: 0 1px 2px rgba(0,0,0,.4);
+  --gap: 3px; --radius: 6px;
+}
+body.theme-aero .info { margin: 0 12px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,.25); }
+body.theme-aero .guide { margin: 0 12px; }
+
+/* ---------- Theme: clean light ---------- */
+body.theme-daylight {
+  --page-bg: #eef1f6; --top-bg: #fff; --top-fg: #1a1f2b;
+  --accent: #2f6fed; --on-accent: #fff;
+  --info-bg: #fff; --info-fg: #1a1f2b; --muted: #6b7486;
+  --time-bg: #eef1f6; --time-fg: #4a5366;
+  --ch-bg: #fff; --ch-fg: #1a1f2b; --ch-num: #6b7486;
+  --row-bg: #eef1f6; --cell-bg: #fff; --cell-fg: #1a1f2b; --cell-sub: #6b7486; --cell-border: #dde2ea;
+  --focus-bg: #2f6fed; --focus-fg: #fff;
+  --nowline: #e5484d; --progress: #2f6fed; --crawl-bg: #fff; --crawl-fg: #4a5366;
+  --font: "Segoe UI", system-ui, -apple-system, sans-serif; --text-shadow: none;
+  --gap: 4px; --radius: 8px;
+}
+body.theme-daylight .info { margin: 0 12px 10px; border-radius: 14px; border: 0; box-shadow: 0 2px 10px rgba(20,30,60,.08); }
+body.theme-daylight .guide { margin: 0 12px; }
+body.theme-daylight .timebar .corner, body.theme-daylight .slots .slot { border-color: #dde2ea; font-weight: 600; font-size: 14px; }
+
+/* ---------- Theme: midnight horror ---------- */
+body.theme-horror {
+  --page-bg: #070405; --top-bg: #0d0607; --top-fg: #f3e6d8;
+  --accent: #ff6a00; --on-accent: #120400;
+  --info-bg: linear-gradient(160deg, #1c0a0c, #0d0607); --info-fg: #f3e6d8; --muted: #b98f7a;
+  --time-bg: #120708; --time-fg: #ff6a00;
+  --ch-bg: #160809; --ch-fg: #f3e6d8; --ch-num: #ff6a00;
+  --row-bg: #070405; --cell-bg: linear-gradient(180deg, #2a0f12, #1a0809);
+  --cell-fg: #f3e6d8; --cell-sub: #b98f7a; --cell-border: #4a1a1c;
+  --focus-bg: linear-gradient(#ff8a2b, #d94f00); --focus-fg: #120400;
+  --nowline: #8cff3a; --progress: #8cff3a; --crawl-bg: #120708; --crawl-fg: #f3e6d8;
+  --font: Georgia, "Times New Roman", serif; --text-shadow: 0 0 8px rgba(255,106,0,.3);
+  --gap: 2px; --radius: 2px;
+}
+
+/* ---------- Theme: Saturday morning toons ---------- */
+body.theme-toon {
+  --page-bg: #ffd400; --top-bg: #111; --top-fg: #fff;
+  --accent: #ff3d7f; --on-accent: #fff;
+  --info-bg: #fff; --info-fg: #111; --muted: #555;
+  --time-bg: #111; --time-fg: #ffd400;
+  --ch-bg: #fff; --ch-fg: #111; --ch-num: #ff3d7f;
+  --row-bg: #ffd400; --cell-bg: #fff; --cell-fg: #111; --cell-sub: #555; --cell-border: #111;
+  --focus-bg: #2bd2ff; --focus-fg: #111;
+  --nowline: #ff3d7f; --progress: #ff3d7f; --crawl-bg: #111; --crawl-fg: #fff;
+  --font: "Arial Black", "Segoe UI Black", Impact, sans-serif; --text-shadow: none;
+  --gap: 5px; --radius: 10px;
+}
+body.theme-toon .cell > .in, body.theme-toon .ch { border-width: 3px; box-shadow: 3px 3px 0 #111; }
+body.theme-toon .cell .s, body.theme-toon .info .desc, body.theme-toon .info .meta { font-family: Arial, sans-serif; }
+body.theme-toon .info { margin: 8px 12px; border: 3px solid #111; border-radius: 14px; box-shadow: 4px 4px 0 #111; }
+body.theme-toon .guide { margin: 0 8px; }
+
+/* Text on accent-colored chips (logo, badges, ticker label) */
+body .brand .logo, body .badge.solid, body .crawl .lbl, body .linkbtn { color: var(--on-accent, #000); }
+
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
@@ -391,9 +586,29 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
     <div class="row2">
       <label>Look
         <select id="fTheme">
-          <option value="prevue">90s cable preview channel</option>
-          <option value="print">Print magazine</option>
-          <option value="modern">Modern streaming</option>
+          <optgroup label="Classic TV guides">
+            <option value="prevue">90s cable preview channel</option>
+            <option value="tvgchannel">2000s TV listings channel</option>
+            <option value="cablebox">Digital cable box</option>
+            <option value="print">Print magazine</option>
+            <option value="newspaper">Newspaper listings</option>
+            <option value="teletext">Teletext</option>
+          </optgroup>
+          <optgroup label="Retro">
+            <option value="phosphor">Green screen terminal</option>
+            <option value="amber">Amber CRT</option>
+            <option value="seventies">70s wood panel</option>
+            <option value="synthwave">80s neon</option>
+            <option value="aero">Y2K glossy</option>
+          </optgroup>
+          <optgroup label="Modern">
+            <option value="modern">Modern streaming (dark)</option>
+            <option value="daylight">Clean light</option>
+          </optgroup>
+          <optgroup label="Fun">
+            <option value="horror">Midnight horror</option>
+            <option value="toon">Saturday morning toons</option>
+          </optgroup>
         </select>
       </label>
       <label>Hours shown
@@ -422,7 +637,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
       <div class="cgrid" id="cgrid"></div>
       <div class="cactions"><span>Changes preview live and are saved for the current look. A dot marks a custom color.</span><button type="button" id="cReset">Reset to defaults</button></div>
     </details>
-    <div class="hint">Keys: <kbd>↑</kbd><kbd>↓</kbd> channels · <kbd>←</kbd><kbd>→</kbd> programs · <kbd>PgUp</kbd><kbd>PgDn</kbd> page · <kbd>N</kbd> now · <kbd>A</kbd> auto-scroll · <kbd>F</kbd> fullscreen · <kbd>S</kbd> settings</div>
+    <div class="hint">Keys: <kbd>↑</kbd><kbd>↓</kbd> channels · <kbd>←</kbd><kbd>→</kbd> programs · <kbd>PgUp</kbd><kbd>PgDn</kbd> page · <kbd>N</kbd> now · <kbd>A</kbd> auto-scroll · <kbd>T</kbd> change look · <kbd>F</kbd> fullscreen · <kbd>S</kbd> settings</div>
     <div class="actions">
       <button value="cancel">Close</button>
       <button value="save" class="primary" id="fSave">Save</button>
@@ -596,7 +811,15 @@ function parseXmltv(text) {
     });
   }
 
-  for (const ch of channels) ch.progs.sort((a, b) => a.start - b.start);
+  for (const ch of channels) {
+    ch.progs.sort((a, b) => a.start - b.start);
+    // Some listings end a show after the next one starts; end it there instead.
+    for (let i = 0; i < ch.progs.length - 1; i++) {
+      const p = ch.progs[i], next = ch.progs[i + 1];
+      if (p.stop > next.start && next.start > p.start) p.stop = next.start;
+    }
+    ch.progs = ch.progs.filter((p, i, a) => i === 0 || p.start >= a[i - 1].stop);
+  }
   channels.sort((a, b) => {
     const na = parseFloat(a.number), nb = parseFloat(b.number);
     if (isFinite(na) && isFinite(nb) && na !== nb) return na - nb;
@@ -1069,6 +1292,16 @@ document.addEventListener("keydown", (e) => {
     case "n": case "N": handled(); goNow(); break;
     case "f": case "F": e.preventDefault(); toggleFullscreen(); break;
     case "s": case "S": e.preventDefault(); openSettings(); break;
+    case "t": case "T": {
+      e.preventDefault();
+      const opts = [...$("#fTheme").options];
+      const next = opts[(opts.findIndex((o) => o.value === settings.theme) + 1) % opts.length];
+      settings.theme = next.value;
+      saveSettings();
+      render();
+      toast(next.textContent);
+      break;
+    }
     case "a": case "A":
       e.preventDefault();
       settings.autoscroll = !settings.autoscroll;
