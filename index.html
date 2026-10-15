@@ -308,11 +308,6 @@ body .brand .logo, body .badge.solid, body .crawl .lbl, body .linkbtn { color: v
 }
 .ad-body { flex: none; display: grid; place-items: center; overflow: hidden; transition: width .35s ease, height .35s ease; }
 .ad-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
-.ad-tag {
-  position: absolute; left: 4px; bottom: 3px; z-index: 2;
-  font: 700 9px/1 Arial, sans-serif; letter-spacing: .5px; text-transform: uppercase;
-  background: rgba(0,0,0,.6); color: #fff; padding: 2px 4px; border-radius: 2px; pointer-events: none;
-}
 .ad-x {
   position: absolute; right: 3px; top: 3px; z-index: 3; width: 20px; height: 20px; padding: 0;
   border: 0; border-radius: 50%; background: rgba(0,0,0,.65); color: #fff; cursor: pointer;
@@ -350,7 +345,6 @@ body .brand .logo, body .badge.solid, body .crawl .lbl, body .linkbtn { color: v
   background: #c0c0c0; color: #000; border: 2px outset #fff; font: 700 11px/11px Tahoma, Arial, sans-serif;
 }
 .ad-pop .ad-body { background: #fff; border: 2px inset #fff; }
-.ad-pop .ad-tag { bottom: 6px; left: 7px; }
 
 @media (max-width: 760px) {
   .info.has-ad { grid-template-columns: 1fr; }
@@ -1393,7 +1387,7 @@ function adFrame(slot, extraClass) {
   const title = slot === "popup" ? `<div class="ad-title">!!! SPECIAL OFFER !!!</div>` : "";
   return `<div class="ad ${extraClass}" data-slot="${slot}">${title}` +
     `<button type="button" class="ad-x" aria-label="Close ad" title="Close">×</button>` +
-    `<span class="ad-tag">Ad · Parody</span><div class="ad-body"></div></div>`;
+    `<div class="ad-body"></div></div>`;
 }
 function adContent(ad) {
   if (!ad) return "";
