@@ -314,6 +314,7 @@ body .brand .logo, body .badge.solid, body .crawl .lbl, body .linkbtn { color: v
   font: 700 15px/20px Arial, sans-serif; text-align: center;
 }
 .ad-x:hover { background: rgba(0,0,0,.85); }
+.ad.ad-closed, .row.adrow:has(.ad-closed) { display: none; }
 .ad-text { padding: 10px 28px; text-align: center; font-family: Arial, sans-serif; }
 .ad-text b { display: block; font-size: 18px; margin-bottom: 4px; }
 .ad-cap { flex: none; font: 700 12px/1.2 Arial, sans-serif; padding: 3px 6px; text-align: center; background: var(--accent); color: var(--on-accent, #000); }
@@ -1418,6 +1419,7 @@ function paintAdSlot(slot, animate) {
   for (const el of document.querySelectorAll(`.ad[data-slot="${slot}"]`)) {
     const body = el.querySelector(".ad-body");
     const ad = ADS[adState[slot].i];
+    el.classList.toggle("ad-closed", !!adState[slot].closed);
     sizeAd(el, slot, ad);
     if (body.dataset.i === String(adState[slot].i) && !animate) continue;
     body.innerHTML = html;
@@ -1482,9 +1484,30 @@ async function loadAds() {
   // Stagger the first changes so the slots start out of step.
   for (const s of AD_SLOTS) scheduleAd(s);
 }
-// The close buttons are decorative. They do nothing. The ads stay.
+// Closing an ad only lasts a moment: the spot comes back after 3 seconds.
+const AD_REOPEN_MS = 3000;
+function setAdClosed(slot, closed) {
+  for (const el of document.querySelectorAll(`.ad[data-slot="${slot}"]`)) el.classList.toggle("ad-closed", closed);
+}
+function closeAd(slot) {
+  const st = adState[slot];
+  if (st.closed) return;
+  st.closed = true;
+  clearTimeout(st.timer);       // no rotation while it's gone
+  st.next = -Infinity;          // and don't hold up the other slots' timing
+  setAdClosed(slot, true);
+  setTimeout(() => {
+    st.closed = false;
+    setAdClosed(slot, false);
+    paintAdSlot(slot, true);    // pop back in with the same ad
+    scheduleAd(slot);
+  }, AD_REOPEN_MS);
+}
 document.addEventListener("click", (e) => {
-  if (e.target.closest(".ad-x")) { e.preventDefault(); e.stopPropagation(); }
+  const x = e.target.closest(".ad-x");
+  if (!x) return;
+  e.preventDefault(); e.stopPropagation();
+  closeAd(x.closest(".ad").dataset.slot);
 }, true);
 
 /* ---------------- Boot ---------------- */
