@@ -1,10 +1,10 @@
 [
-  { "src": "ads/ad1.gif", "alt": "Parody ad: a man in scrubs next to a fake 800-555-1234 hotline" },
-  { "src": "ads/ad2.gif", "alt": "Parody ad: a phone game ad with a close button" },
-  { "src": "ads/ad3.gif", "alt": "Parody ad: a grinning man under a crypto logo" },
-  { "src": "ads/ad4.gif", "alt": "Parody ad: a cat driving a car, crypto meme" },
-  { "src": "ads/ad5.gif", "alt": "Parody ad: 'There is no admin abuse' meme" },
-  { "src": "ads/ad6.gif", "alt": "Parody ad: international calling cards, 20% discount" },
-  { "src": "ads/ad7.gif", "alt": "Parody ad: a dancing game avatar" },
-  { "src": "ads/ad8.png", "alt": "Click 'em up" }
+  {"src": "ads/ad1.gif", "alt": "Parody ad: a man in scrubs next to a fake 800-555-1234 hotline", "w": 280, "h": 144},
+  {"src": "ads/ad2.gif", "alt": "Parody ad: a phone game ad with a close button", "w": 145, "h": 280},
+  {"src": "ads/ad3.gif", "alt": "Parody ad: a grinning man under a crypto logo", "w": 280, "h": 280},
+  {"src": "ads/ad4.gif", "alt": "Parody ad: a cat driving a car, crypto meme", "w": 280, "h": 183},
+  {"src": "ads/ad5.gif", "alt": "Parody ad: 'There is no admin abuse' meme", "w": 220, "h": 162},
+  {"src": "ads/ad6.gif", "alt": "Parody ad: international calling cards, 20% discount", "w": 280, "h": 280},
+  {"src": "ads/ad7.gif", "alt": "Parody ad: a dancing game avatar", "w": 158, "h": 280},
+  {"src": "ads/ad8.png", "alt": "Click 'em up", "w": 360, "h": 62}
 ]
