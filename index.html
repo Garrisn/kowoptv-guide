@@ -468,7 +468,10 @@ body.theme-print .slots .slot { border-left-color: #fff; text-transform: upperca
 
 .rows { flex: 1; overflow-y: auto; overflow-x: hidden; scrollbar-width: none; background: var(--row-bg); }
 .rows::-webkit-scrollbar { display: none; }
-.row { display: flex; height: var(--rowh); margin-bottom: var(--gap); }
+.row { display: flex; flex: none; height: var(--rowh); margin-bottom: var(--gap); }
+/* Fill the grid area so a spot after the last channel can sit midway down the empty space. */
+#rowsInner { display: flex; flex-direction: column; min-height: 100%; }
+#rowsInner > .row.kw-row:last-child { flex: 1 0 auto; }
 .ch {
   width: var(--chw); flex: none; display: flex; align-items: center; gap: 8px; padding: 0 8px;
   background: var(--ch-bg); color: var(--ch-fg);
