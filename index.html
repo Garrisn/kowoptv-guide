@@ -302,55 +302,55 @@ body .brand .logo, body .badge.solid, body .crawl .lbl, body .linkbtn { color: v
 
 
 /* ---------- Parody ads ---------- */
-.ad {
+.kw-spot {
   position: relative; overflow: hidden; display: flex; flex-direction: column;
   background: #fff; color: #111; border: 2px solid var(--accent); border-radius: var(--radius);
 }
-.ad-body { flex: none; display: grid; place-items: center; overflow: hidden; transition: width .35s ease, height .35s ease; }
-.ad-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
-.ad-x {
+.kw-body { flex: none; display: grid; place-items: center; overflow: hidden; transition: width .35s ease, height .35s ease; }
+.kw-body img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.kw-x {
   position: absolute; right: 3px; top: 3px; z-index: 3; width: 20px; height: 20px; padding: 0;
   border: 0; border-radius: 50%; background: rgba(0,0,0,.65); color: #fff; cursor: pointer;
   font: 700 15px/20px Arial, sans-serif; text-align: center;
 }
-.ad-x:hover { background: rgba(0,0,0,.85); }
-.ad.ad-closed, .row.adrow:has(.ad-closed) { display: none; }
-.ad-text { padding: 10px 28px; text-align: center; font-family: Arial, sans-serif; }
-.ad-text b { display: block; font-size: 18px; margin-bottom: 4px; }
-.ad-cap { flex: none; font: 700 12px/1.2 Arial, sans-serif; padding: 3px 6px; text-align: center; background: var(--accent); color: var(--on-accent, #000); }
-.ad.swap .ad-body { animation: adIn .35s ease-out; }
+.kw-x:hover { background: rgba(0,0,0,.85); }
+.kw-spot.kw-closed, .row.kw-row:has(.kw-closed) { display: none; }
+.kw-text { padding: 10px 28px; text-align: center; font-family: Arial, sans-serif; }
+.kw-text b { display: block; font-size: 18px; margin-bottom: 4px; }
+.kw-cap { flex: none; font: 700 12px/1.2 Arial, sans-serif; padding: 3px 6px; text-align: center; background: var(--accent); color: var(--on-accent, #000); }
+.kw-spot.swap .kw-body { animation: adIn .35s ease-out; }
 @keyframes adIn { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .ad.swap .ad-body { animation: none; } .ad-body { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .kw-spot.swap .kw-body { animation: none; } .kw-body { transition: none; } }
 
 /* Slot 1: details panel */
-.info.has-ad { grid-template-columns: 150px 1fr auto auto; }
-.ad-info { align-self: center; }
+.info.has-spot { grid-template-columns: 150px 1fr auto auto; }
+.kw-info { align-self: center; }
 
 /* Slot 2: banner rows in the channel grid */
-.row.adrow { height: auto; justify-content: center; align-items: center; padding: 6px 0; }
-.adrow .ad { flex: none; background: #111; color: #fff; }
+.row.kw-row { height: auto; justify-content: center; align-items: center; padding: 6px 0; }
+.kw-row .kw-spot { flex: none; background: #111; color: #fff; }
 
 /* Slot 3: fake old-Windows pop-up */
-.ad-pop {
+.kw-pop {
   position: fixed; right: 16px; bottom: 44px; z-index: 40;
   background: #c0c0c0; border: 2px outset #fff; border-radius: 0; box-shadow: 4px 4px 0 rgba(0,0,0,.45);
   padding: 0 3px 3px;
 }
-.ad-pop .ad-title {
+.kw-pop .kw-title {
   flex: none; margin: 3px 0; height: 20px; padding: 0 26px 0 5px;
   background: linear-gradient(90deg, #000080, #1084d0); color: #fff;
   font: 700 12px/20px Tahoma, Arial, sans-serif; white-space: nowrap; overflow: hidden;
 }
-.ad-pop .ad-x {
+.kw-pop .kw-x {
   top: 5px; right: 5px; width: 18px; height: 16px; border-radius: 0;
   background: #c0c0c0; color: #000; border: 2px outset #fff; font: 700 11px/11px Tahoma, Arial, sans-serif;
 }
-.ad-pop .ad-body { background: #fff; border: 2px inset #fff; }
+.kw-pop .kw-body { background: #fff; border: 2px inset #fff; }
 
 @media (max-width: 760px) {
-  .info.has-ad { grid-template-columns: 1fr; }
-  .ad-info { display: none; }
-  .ad-pop { right: 8px; }
+  .info.has-spot { grid-template-columns: 1fr; }
+  .kw-info { display: none; }
+  .kw-pop { right: 8px; }
 }
 
 * { box-sizing: border-box; }
@@ -1013,7 +1013,7 @@ function render() {
     rows += `<div class="row" data-ch="${i}"><div class="ch${i === state.focus.ch ? " focused" : ""}" data-ch="${i}" title="${esc(ch.number + " " + ch.name)}">` +
       `<span class="n">${esc(ch.number || "•")}</span>${logo}<span class="nm">${esc(ch.name)}</span></div><div class="progs">${cells}</div></div>`;
     if (ADS.length && ((i + 1) % 6 === 0 || i === state.channels.length - 1)) {
-      rows += `<div class="row adrow">${adFrame("grid", "ad-grid")}</div>`;
+      rows += `<div class="row kw-row">${adFrame("grid", "kw-grid")}</div>`;
     }
   });
 
@@ -1375,8 +1375,8 @@ window.addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTi
 
 
 /* ---------------- Parody ads ---------------- */
-// Ads live in ads/ (next to index.html) and are listed in ads/ads.json:
-//   [{ "src": "ads/name.gif", "alt": "short description", "caption": "optional" }, ...]
+// Spots live in spots/ (next to index.html) and are listed in spots/list.json:
+//   [{ "src": "spots/name.gif", "alt": "short description", "caption": "optional" }, ...]
 // Three slots each rotate every 6–10 s on their own timer; changes are kept at least
 // AD_MIN_GAP ms apart so no two slots ever switch at the same moment.
 let ADS = [];
@@ -1385,17 +1385,17 @@ const AD_MIN_GAP = 800;
 const adState = Object.fromEntries(AD_SLOTS.map((s) => [s, { i: -1, next: 0, timer: 0 }]));
 
 function adFrame(slot, extraClass) {
-  const title = slot === "popup" ? `<div class="ad-title">!!! SPECIAL OFFER !!!</div>` : "";
-  return `<div class="ad ${extraClass}" data-slot="${slot}">${title}` +
-    `<button type="button" class="ad-x" aria-label="Close ad" title="Close">×</button>` +
-    `<div class="ad-body"></div></div>`;
+  const title = slot === "popup" ? `<div class="kw-title">!!! SPECIAL OFFER !!!</div>` : "";
+  return `<div class="kw-spot ${extraClass}" data-slot="${slot}">${title}` +
+    `<button type="button" class="kw-x" aria-label="Close" title="Close">×</button>` +
+    `<div class="kw-body"></div></div>`;
 }
 function adContent(ad) {
   if (!ad) return "";
   const body = ad.src
     ? `<img src="${esc(ad.src)}" alt="${esc(ad.alt || ad.caption || "Advertisement")}">`
-    : `<div class="ad-text"><b>${esc(ad.title || "")}</b>${esc(ad.text || "")}</div>`;
-  return body + (ad.caption ? `<div class="ad-cap">${esc(ad.caption)}</div>` : "");
+    : `<div class="kw-text"><b>${esc(ad.title || "")}</b>${esc(ad.text || "")}</div>`;
+  return body + (ad.caption ? `<div class="kw-cap">${esc(ad.caption)}</div>` : "");
 }
 // Fill every element for a slot (the grid slot can appear in several rows).
 // Largest box each slot may use; the ad is scaled to fit inside it, keeping its shape.
@@ -1410,16 +1410,16 @@ function adSize(slot, ad) {
 }
 function sizeAd(el, slot, ad) {
   const [w, h] = adSize(slot, ad);
-  const body = el.querySelector(".ad-body");
+  const body = el.querySelector(".kw-body");
   body.style.width = w + "px";
   body.style.height = h + "px";
 }
 function paintAdSlot(slot, animate) {
   const html = adContent(ADS[adState[slot].i]);
-  for (const el of document.querySelectorAll(`.ad[data-slot="${slot}"]`)) {
-    const body = el.querySelector(".ad-body");
+  for (const el of document.querySelectorAll(`.kw-spot[data-slot="${slot}"]`)) {
+    const body = el.querySelector(".kw-body");
     const ad = ADS[adState[slot].i];
-    el.classList.toggle("ad-closed", !!adState[slot].closed);
+    el.classList.toggle("kw-closed", !!adState[slot].closed);
     sizeAd(el, slot, ad);
     if (body.dataset.i === String(adState[slot].i) && !animate) continue;
     body.innerHTML = html;
@@ -1461,24 +1461,24 @@ function scheduleAd(slot) {
 function placeAds() {
   if (!ADS.length) return;
   const info = $("#info");
-  if (!info.querySelector(".ad-info") && window.innerWidth >= 760) {
-    info.insertAdjacentHTML("beforeend", adFrame("info", "ad-info"));
+  if (!info.querySelector(".kw-info") && window.innerWidth >= 760) {
+    info.insertAdjacentHTML("beforeend", adFrame("info", "kw-info"));
   }
-  info.classList.toggle("has-ad", !!info.querySelector(".ad-info"));
+  info.classList.toggle("has-spot", !!info.querySelector(".kw-info"));
   for (const s of AD_SLOTS) paintAdSlot(s, false);
 }
 async function loadAds() {
   try {
-    const res = await fetch("ads/ads.json", { cache: "no-store" });
+    const res = await fetch("spots/list.json", { cache: "no-store" });
     if (!res.ok) return;
     const list = await res.json();
-    // Only local images in ads/ (or text-only ads) are allowed.
+    // Only local images in spots/ (or text-only spots) are allowed.
     ADS = (Array.isArray(list) ? list : []).filter((a) =>
-      a && (a.src ? /^ads\/[\w.-]+\.(png|jpe?g|gif|webp)$/i.test(a.src) : a.title || a.text))
+      a && (a.src ? /^spots\/[\w.-]+\.(png|jpe?g|gif|webp)$/i.test(a.src) : a.title || a.text))
       .map((a) => ({ ...a, w: +a.w || 0, h: +a.h || 0 }));
   } catch { ADS = []; }
   if (!ADS.length) return;
-  document.body.insertAdjacentHTML("beforeend", adFrame("popup", "ad-pop"));
+  document.body.insertAdjacentHTML("beforeend", adFrame("popup", "kw-pop"));
   AD_SLOTS.forEach((s, n) => { adState[s].i = n % ADS.length; });
   render();
   // Stagger the first changes so the slots start out of step.
@@ -1487,7 +1487,7 @@ async function loadAds() {
 // Closing an ad only lasts a moment: the spot comes back after 3 seconds.
 const AD_REOPEN_MS = 3000;
 function setAdClosed(slot, closed) {
-  for (const el of document.querySelectorAll(`.ad[data-slot="${slot}"]`)) el.classList.toggle("ad-closed", closed);
+  for (const el of document.querySelectorAll(`.kw-spot[data-slot="${slot}"]`)) el.classList.toggle("kw-closed", closed);
 }
 function closeAd(slot) {
   const st = adState[slot];
@@ -1504,10 +1504,10 @@ function closeAd(slot) {
   }, AD_REOPEN_MS);
 }
 document.addEventListener("click", (e) => {
-  const x = e.target.closest(".ad-x");
+  const x = e.target.closest(".kw-x");
   if (!x) return;
   e.preventDefault(); e.stopPropagation();
-  closeAd(x.closest(".ad").dataset.slot);
+  closeAd(x.closest(".kw-spot").dataset.slot);
 }, true);
 
 /* ---------------- Boot ---------------- */
