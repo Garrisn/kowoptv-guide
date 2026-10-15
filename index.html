@@ -685,6 +685,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
     <label class="check"><input type="checkbox" id="fAuto"> Auto-scroll channels like a preview channel</label>
     <label class="check"><input type="checkbox" id="fCrawl"> Show "On Now" crawl</label>
     <label class="check"><input type="checkbox" id="f24"> 24-hour clock</label>
+    <label class="check"><input type="checkbox" id="fIdle"> Idle pop-ups (open after 15 seconds without interaction)</label>
     <details class="colors" id="colorBox">
       <summary>Colors</summary>
       <div class="cgrid" id="cgrid"></div>
@@ -716,6 +717,7 @@ const DEFAULTS = {
   autoscroll: false,
   crawl: true,
   h24: false,
+  idleAds: true,
   colors: {},           // { themeName: { '--css-var': '#hex' } }
 };
 
@@ -1223,6 +1225,7 @@ function openSettings() {
   $("#fAuto").checked = settings.autoscroll;
   $("#fCrawl").checked = settings.crawl;
   $("#f24").checked = settings.h24;
+  $("#fIdle").checked = settings.idleAds !== false;
   draftColors = JSON.parse(JSON.stringify(settings.colors || {}));
   buildColorPickers();
   if (!$("#dlg").open) $("#dlg").showModal();
@@ -1235,6 +1238,7 @@ function readForm() {
   settings.autoscroll = $("#fAuto").checked;
   settings.crawl = $("#fCrawl").checked;
   settings.h24 = $("#f24").checked;
+  settings.idleAds = $("#fIdle").checked;
   settings.colors = draftColors;
   saveSettings();
 }
@@ -1507,8 +1511,55 @@ document.addEventListener("click", (e) => {
   const x = e.target.closest(".kw-x");
   if (!x) return;
   e.preventDefault(); e.stopPropagation();
+  const idle = x.closest(".kw-idle");
+  if (idle) { idle.remove(); return; }   // idle pop-ups close for real
   closeAd(x.closest(".kw-spot").dataset.slot);
 }, true);
+
+/* ---------------- Idle pop-ups ---------------- */
+// After ~15 s with no interaction, pop-up windows start opening one after another at
+// random spots. Their × really closes them, and nothing is saved, so a refresh clears
+// them all. Any interaction stops new ones; going idle again starts them again.
+const IDLE_MS = 15000;
+const IDLE_MAX = 200; // never more than this many open at once
+const IDLE_TITLES = [
+  "!!! SPECIAL OFFER !!!", "Are you still watching?", "CONGRATULATIONS!!!",
+  "Don't touch that dial!", "Limited time only!", "You are our 1,000,000th viewer!",
+];
+let lastActive = Date.now(), idleTimer = 0, idleZ = 50;
+function markActive() {
+  lastActive = Date.now();
+  clearTimeout(idleTimer);
+  idleTimer = 0;
+}
+for (const ev of ["mousemove", "mousedown", "keydown", "wheel", "touchstart"]) {
+  document.addEventListener(ev, markActive, { passive: true, capture: true });
+}
+function spawnIdleAd() {
+  idleTimer = 0;
+  if (!ADS.length || settings.idleAds === false || $("#dlg").open || document.hidden) return;
+  if (Date.now() - lastActive < IDLE_MS) return;
+  if (document.querySelectorAll(".kw-idle").length < IDLE_MAX) {
+    const ad = ADS[Math.floor(Math.random() * ADS.length)];
+    const [w, h] = adSize("popup", ad);
+    const title = IDLE_TITLES[Math.floor(Math.random() * IDLE_TITLES.length)];
+    const el = document.createElement("div");
+    el.className = "kw-spot kw-pop kw-idle swap";
+    el.innerHTML = `<div class="kw-title">${esc(title)}</div>` +
+      `<button type="button" class="kw-x" aria-label="Close" title="Close">×</button>` +
+      `<div class="kw-body" style="width:${w}px;height:${h}px">${adContent(ad)}</div>`;
+    const ww = w + 10, wh = h + 34; // window chrome around the image
+    el.style.left = Math.round(8 + Math.random() * Math.max(0, window.innerWidth - ww - 16)) + "px";
+    el.style.top = Math.round(8 + Math.random() * Math.max(0, window.innerHeight - wh - 48)) + "px";
+    el.style.right = el.style.bottom = "auto";
+    el.style.zIndex = ++idleZ;
+    document.body.appendChild(el);
+  }
+  idleTimer = setTimeout(spawnIdleAd, 1000 + Math.random() * 1500);
+}
+setInterval(() => {
+  if (!idleTimer && Date.now() - lastActive >= IDLE_MS) spawnIdleAd();
+}, 1000);
 
 /* ---------------- Boot ---------------- */
 updateClock();
