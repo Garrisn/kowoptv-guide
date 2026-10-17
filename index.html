@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://raw.githubusercontent.com; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; base-uri 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow">
 <title>KoWOPTV Guide</title>
@@ -919,15 +919,28 @@ function dataUrl() {
 }
 
 let retryTimer;
+// GitHub's raw-file CDN can hand out a copy up to ~5 minutes old (it ignores query strings),
+// so ask the API for the current file first. It allows 60 requests/hour per visitor; if
+// that's used up or the API is down, fall back to the raw file.
+const API_URL = "https://api.github.com/repos/Garrisn/kowoptv-guide/contents/guide.xml?ref=data";
+async function fetchSchedule(url) {
+  try {
+    const r = await fetch(API_URL, {
+      cache: "no-store", headers: { Accept: "application/vnd.github.raw" },
+      signal: AbortSignal.timeout?.(15000),
+    });
+    if (r.ok) return await r.text();
+  } catch { /* fall through to the raw file */ }
+  const res = await fetch(url, { cache: "no-store", signal: AbortSignal.timeout?.(15000) });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.text();
+}
+
 async function loadFromServer() {
   clearTimeout(retryTimer);
   const url = dataUrl();
   try {
-    // Unique on every request so a fresh upload shows up on the next load (no CDN/browser caching).
-    const bust = (url.includes("?") ? "&" : "?") + "t=" + Date.now();
-    const res = await fetch(url + bust, { cache: "no-store", signal: AbortSignal.timeout?.(15000) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
+    const text = await fetchSchedule(url);
     const channels = parseXmltv(text);
     if (!channels.length) throw new Error("no channels in schedule");
     const gen = /<tv\b[^>]*\bdate="([^"]+)"/.exec(text);
