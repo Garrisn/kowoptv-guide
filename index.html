@@ -476,13 +476,15 @@ body.theme-christmas .timebar { border-bottom: 5px solid #c8102e;
 
 
 /* ---------- WOPtv logo art ---------- */
-.brand-logo { height: 68px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
-.ch .lg.art { flex: 1; width: auto; height: calc(var(--rowh) - 8px); min-width: 0; }
-.ch .lg.art img { filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+.brand-logo { height: 136px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
+.ch .lg.art { flex: 1 1 auto; align-self: stretch; width: auto; height: auto; min-width: 0; min-height: 0;
+  display: flex; align-items: center; justify-content: center; padding: 3px 0; }
+.ch .lg.art img { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
 .info .chbox .art { max-width: 120px; max-height: 96px; object-fit: contain; }
 @media (max-width: 760px) {
-  .brand-logo { height: 46px; }
-  .ch .lg.art { display: grid; width: 100%; height: calc(var(--rowh) - 22px); flex: none; }
+  .brand-logo { height: 72px; }
+  .ch .lg.art { display: flex; width: 100%; height: calc(var(--rowh) - 22px); flex: none; align-self: auto; padding: 1px 0; }
 }
 
 * { box-sizing: border-box; }
@@ -832,7 +834,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
     <label class="check"><input type="checkbox" id="fAuto"> Auto-scroll channels like a preview channel</label>
     <label class="check"><input type="checkbox" id="fCrawl"> Show "On Now" crawl</label>
     <label class="check"><input type="checkbox" id="f24"> 24-hour clock</label>
-    <label class="check"><input type="checkbox" id="fIdle"> Idle pop-ups (open after 11 seconds without interaction)</label>
+    <label class="check"><input type="checkbox" id="fIdle"> Pop-up ad spam (windows that open after 11 seconds without interaction; the regular ad spots stay)</label>
     <label class="check"><input type="checkbox" id="fHol"> Holiday looks (switch automatically on holidays)</label>
     <div class="hint" id="holNow"></div>
     <details class="colors" id="colorBox">
@@ -1544,6 +1546,7 @@ function readForm() {
   settings.crawl = $("#fCrawl").checked;
   settings.h24 = $("#f24").checked;
   settings.idleAds = $("#fIdle").checked;
+  if (!settings.idleAds) document.querySelectorAll(".kw-idle").forEach((e) => e.remove());
   settings.holidays = $("#fHol").checked;
   state.holidayPaused = false;
   settings.colors = draftColors;
