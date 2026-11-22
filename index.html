@@ -468,11 +468,11 @@ body.theme-christmas .timebar { border-bottom: 5px solid #c8102e;
 .holiday-chip { display: none; font-weight: 700; font-size: 15px; padding: 3px 10px; border-radius: 999px;
   background: var(--accent); color: var(--on-accent, #000); white-space: nowrap; text-shadow: none; }
 .holiday-chip.on { display: inline-block; }
-#decor { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 30; }
-#decor span { position: absolute; top: -48px; opacity: .5; animation: decorFall linear infinite; will-change: transform; }
-@keyframes decorFall { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(calc(100vh + 96px)) rotate(360deg); } }
+#decor { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 30; font-size: 16px; }
+#decor span { position: absolute; top: -90px; opacity: .5; animation: decorFall linear infinite; will-change: transform; }
+@keyframes decorFall { from { transform: translateY(0) rotate(0deg); } to { transform: translateY(calc(100vh + 180px)) rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { #decor { display: none; } }
-@media (max-width: 760px) { .holiday-chip { font-size: 12px; padding: 2px 8px; } }
+@media (max-width: 760px) { .holiday-chip { font-size: 12px; padding: 2px 8px; } #decor { font-size: 11px; } }
 
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
@@ -1167,7 +1167,7 @@ function updateHoliday(theme) {
     const s = document.createElement("span");
     s.textContent = h.decor[i % h.decor.length];
     s.style.left = (Math.random() * 100).toFixed(1) + "vw";
-    s.style.fontSize = (14 + Math.random() * 14).toFixed(0) + "px";
+    s.style.fontSize = (1.75 + Math.random() * 1.5).toFixed(2) + "em";
     s.style.animationDuration = (14 + Math.random() * 16).toFixed(1) + "s";
     s.style.animationDelay = (-Math.random() * 30).toFixed(1) + "s";
     box.appendChild(s);
