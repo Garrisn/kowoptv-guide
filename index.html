@@ -778,6 +778,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
     <div class="row2">
       <label>Look
         <select id="fTheme">
+          <option value="auto">Automatic (holiday look when there is one)</option>
           <optgroup label="Classic TV guides">
             <option value="prevue">90s cable preview channel</option>
             <option value="tvgchannel">2000s TV listings channel</option>
@@ -813,6 +814,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
           </optgroup>
         </select>
       </label>
+    <div class="hint" id="holNow" style="grid-column: 1 / -1"></div>
       <label>Hours shown
         <select id="fHours">
           <option value="1">1 hour</option>
@@ -835,8 +837,6 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
     <label class="check"><input type="checkbox" id="fCrawl"> Show "On Now" crawl</label>
     <label class="check"><input type="checkbox" id="f24"> 24-hour clock</label>
     <label class="check"><input type="checkbox" id="fIdle"> Pop-up ad spam (windows that open after 11 seconds without interaction; the regular ad spots stay)</label>
-    <label class="check"><input type="checkbox" id="fHol"> Holiday looks (switch automatically on holidays)</label>
-    <div class="hint" id="holNow"></div>
     <details class="colors" id="colorBox">
       <summary>Colors</summary>
       <div class="cgrid" id="cgrid"></div>
@@ -861,7 +861,7 @@ const SLOT = 30 * 60000;
 const LS_KEY = "etvguide.settings.v1";
 const DEFAULTS = {
   server: "",
-  theme: "prevue",
+  theme: "auto",          // "auto" = today's holiday look, else 90s cable
   hours: 2,
   refresh: 10,
   speed: 30,
@@ -869,7 +869,6 @@ const DEFAULTS = {
   crawl: true,
   h24: false,
   idleAds: true,
-  holidays: true,
   colors: {},           // { themeName: { '--css-var': '#hex' } }
 };
 
@@ -888,6 +887,11 @@ const state = {
 function loadSettings() {
   try {
     const s = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
+    if (!s.lookV) {
+      if (s.theme === "prevue" && s.holidays !== false) s.theme = "auto";
+      delete s.holidays;
+      s.lookV = 2;
+    }
     return Object.assign({}, DEFAULTS, s);
   } catch { return Object.assign({}, DEFAULTS); }
 }
@@ -1160,11 +1164,10 @@ function activeHoliday(now = new Date()) {
   if (m === 11) return "christmas";                                         // all of December
   return null;
 }
-// The look actually shown: today's holiday (if enabled and not paused with T), else the chosen look.
-function effectiveTheme() {
-  const h = settings.holidays !== false && !state.holidayPaused ? activeHoliday() : null;
-  return h || settings.theme;
-}
+// "auto" means today's holiday look (or 90s cable when there's no holiday); any other
+// choice is shown as-is, all year.
+function resolveTheme(choice) { return choice === "auto" ? (activeHoliday() || "prevue") : choice; }
+function effectiveTheme() { return resolveTheme(settings.theme); }
 let decorFor = "";
 function updateHoliday(theme) {
   const logoSrc = currentLogo(theme), brand = $("#brandLogo");
@@ -1242,7 +1245,7 @@ function logoHoliday(now = new Date()) {
   return null;
 }
 function currentLogo(theme) {
-  if (settings.holidays !== false && !state.holidayPaused) {
+  if (settings.theme === "auto") {          // Automatic: the holiday logo for today, if any
     const h = logoHoliday();
     if (h) return LOGO_ART[h];
   }
@@ -1529,11 +1532,10 @@ function openSettings() {
   $("#fCrawl").checked = settings.crawl;
   $("#f24").checked = settings.h24;
   $("#fIdle").checked = settings.idleAds !== false;
-  $("#fHol").checked = settings.holidays !== false;
   const hol = activeHoliday();
-  $("#holNow").textContent = hol
-    ? `Today's holiday look: ${HOLIDAYS[hol].name}. While this is on it replaces the look chosen above.`
-    : "No holiday today. Your chosen look is shown.";
+  $("#holNow").textContent = (hol
+    ? `Automatic is showing ${HOLIDAYS[hol].name} today.`
+    : "No holiday today, so Automatic shows the 90s cable look.") + " Choosing any other look keeps it all year.";
   draftColors = JSON.parse(JSON.stringify(settings.colors || {}));
   buildColorPickers();
   if (!$("#dlg").open) $("#dlg").showModal();
@@ -1548,8 +1550,6 @@ function readForm() {
   settings.h24 = $("#f24").checked;
   settings.idleAds = $("#fIdle").checked;
   if (!settings.idleAds) document.querySelectorAll(".kw-idle").forEach((e) => e.remove());
-  settings.holidays = $("#fHol").checked;
-  state.holidayPaused = false;
   settings.colors = draftColors;
   saveSettings();
 }
@@ -1585,7 +1585,7 @@ function toHex(val) {
   return "#" + [r, g, b].map((n) => Math.max(0, Math.min(255, n)).toString(16).padStart(2, "0")).join("");
 }
 function buildColorPickers() {
-  const theme = $("#fTheme").value;
+  const theme = resolveTheme($("#fTheme").value);
   const custom = draftColors[theme] || {};
   applyColors(theme, {});
   const cs = getComputedStyle(document.body);
@@ -1598,13 +1598,13 @@ function buildColorPickers() {
 $("#cgrid").addEventListener("input", (e) => {
   const v = e.target.dataset.var;
   if (!v) return;
-  const theme = $("#fTheme").value;
+  const theme = resolveTheme($("#fTheme").value);
   (draftColors[theme] ||= {})[v] = e.target.value;
   e.target.parentNode.classList.add("custom");
   applyColors(theme, draftColors[theme]);
 });
 $("#cReset").addEventListener("click", () => {
-  delete draftColors[$("#fTheme").value];
+  delete draftColors[resolveTheme($("#fTheme").value)];
   buildColorPickers();
 });
 $("#fTheme").addEventListener("change", buildColorPickers);
@@ -1677,7 +1677,6 @@ document.addEventListener("keydown", (e) => {
       const opts = [...$("#fTheme").options];
       const next = opts[(opts.findIndex((o) => o.value === settings.theme) + 1) % opts.length];
       settings.theme = next.value;
-      state.holidayPaused = true;  // T overrides today's holiday look until reload
       saveSettings();
       render();
       toast(next.textContent);
