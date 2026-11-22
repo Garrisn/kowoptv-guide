@@ -1193,9 +1193,10 @@ function updateHoliday(theme) {
 }
 
 /* ---------------- WOPtv logo art ---------------- */
-// Channel logos, matched by the channel name in the published schedule.
+// Channel logos, matched by channel name. Matching ignores case, extra spaces and
+// bracketed tags, so "Cartoon Network", "Cartoon Network [AS]" and "cartoon network (HD)" all match.
 const CHANNEL_ART = {
-  "cartoon network [as]": "art/ch-cartoon-network.png",
+  "cartoon network": "art/ch-cartoon-network.png",
   "nickelodeon": "art/ch-nickelodeon.png",
   "food network": "art/ch-food-network.png",
   "discovery channel": "art/ch-discovery.png",
@@ -1203,7 +1204,10 @@ const CHANNEL_ART = {
   "adult swim": "art/ch-adult-swim.png",
   "christmas season": "art/logo-christmas.png",
 };
-function channelArt(ch) { return CHANNEL_ART[(ch.name || "").trim().toLowerCase()] || ""; }
+function channelKey(name) {
+  return (name || "").toLowerCase().replace(/\[[^\]]*\]|\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+}
+function channelArt(ch) { return CHANNEL_ART[channelKey(ch.name)] || ""; }
 
 // Top-left logo: the holiday version on its day(s), otherwise the standard one.
 const LOGO_ART = {
