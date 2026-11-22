@@ -474,6 +474,17 @@ body.theme-christmas .timebar { border-bottom: 5px solid #c8102e;
 @media (prefers-reduced-motion: reduce) { #decor { display: none; } }
 @media (max-width: 760px) { .holiday-chip { font-size: 12px; padding: 2px 8px; } #decor { font-size: 11px; } }
 
+
+/* ---------- WOPtv logo art ---------- */
+.brand-logo { height: 46px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
+.ch .lg.art { flex: 1; width: auto; height: calc(var(--rowh) - 8px); min-width: 0; }
+.ch .lg.art img { filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
+.info .chbox .art { max-width: 120px; max-height: 96px; object-fit: contain; }
+@media (max-width: 760px) {
+  .brand-logo { height: 36px; }
+  .ch .lg.art { display: grid; width: 100%; height: calc(var(--rowh) - 22px); flex: none; }
+}
+
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
 body {
@@ -728,7 +739,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
 <div id="decor" aria-hidden="true"></div>
 <div id="app">
   <header class="topbar">
-    <div class="brand"><span class="logo">WTV</span><span>GUIDE</span></div>
+    <div class="brand"><img class="brand-logo" id="brandLogo" src="art/logo-standard.png" alt="WOPtv"><span>GUIDE</span></div>
     <span class="holiday-chip" id="holidayChip"></span>
     <div class="status" id="status">Loading…</div>
     <div class="spacer"></div>
@@ -1154,6 +1165,8 @@ function effectiveTheme() {
 }
 let decorFor = "";
 function updateHoliday(theme) {
+  const logoSrc = currentLogo(theme), brand = $("#brandLogo");
+  if (brand.getAttribute("src") !== logoSrc) brand.setAttribute("src", logoSrc);
   const h = HOLIDAYS[theme];
   const chip = $("#holidayChip");
   chip.textContent = h ? h.greeting : "";
@@ -1172,6 +1185,68 @@ function updateHoliday(theme) {
     s.style.animationDelay = (-Math.random() * 30).toFixed(1) + "s";
     box.appendChild(s);
   }
+}
+
+/* ---------------- WOPtv logo art ---------------- */
+// Channel logos, matched by the channel name in the published schedule.
+const CHANNEL_ART = {
+  "cartoon network [as]": "art/ch-cartoon-network.png",
+  "nickelodeon": "art/ch-nickelodeon.png",
+  "food network": "art/ch-food-network.png",
+  "discovery channel": "art/ch-discovery.png",
+  "hbo": "art/ch-hbo.png",
+  "adult swim": "art/ch-adult-swim.png",
+};
+function channelArt(ch) { return CHANNEL_ART[(ch.name || "").trim().toLowerCase()] || ""; }
+
+// Top-left logo: the holiday version on its day(s), otherwise the standard one.
+const LOGO_ART = {
+  standard: "art/logo-standard.png", newyearseve: "art/logo-newyearseve.png", newyearsday: "art/logo-newyearsday.png",
+  valentine: "art/logo-valentine.png", stpatrick: "art/logo-stpatrick.png", aprilfools: "art/logo-aprilfools.png",
+  easter: "art/logo-easter.png", earthday: "art/logo-earthday.png", memorial: "art/logo-memorial.png",
+  pride: "art/logo-pride.png", juneteenth: "art/logo-juneteenth.png", july4: "art/logo-july4.png",
+  labor: "art/logo-labor.png", halloween: "art/logo-halloween.png", veterans: "art/logo-veterans.png",
+  thanksgiving: "art/logo-thanksgiving.png", christmas: "art/logo-christmas.png",
+};
+// Day of the month of the nth weekday (n = 1..5, or -1 for the last one).
+function nthWeekday(y, m, weekday, n) {
+  if (n > 0) { const first = new Date(y, m, 1).getDay(); return 1 + ((weekday - first + 7) % 7) + (n - 1) * 7; }
+  const lastDay = new Date(y, m + 1, 0); return lastDay.getDate() - ((lastDay.getDay() - weekday + 7) % 7);
+}
+// Single-day and short holidays come first so they win over month-long ones.
+function logoHoliday(now = new Date()) {
+  const y = now.getFullYear(), m = now.getMonth(), d = now.getDate();
+  const today = new Date(y, m, d).getTime(), DAY = 86400000;
+  if (m === 11 && d === 31) return "newyearseve";
+  if (m === 0 && d <= 2) return "newyearsday";
+  if (m === 1 && d >= 10 && d <= 14) return "valentine";
+  if (m === 2 && d >= 14 && d <= 17) return "stpatrick";
+  if (m === 3 && d === 1) return "aprilfools";
+  if (m === 3 && d === 22) return "earthday";
+  const easter = easterSunday(y).getTime();
+  if (today >= easter - 3 * DAY && today <= easter + DAY) return "easter";
+  const memorial = nthWeekday(y, 4, 1, -1);                        // last Monday of May
+  if (m === 4 && d >= memorial - 2 && d <= memorial) return "memorial";
+  if (m === 5 && d === 19) return "juneteenth";
+  if (m === 5) return "pride";                                       // all of June
+  if (m === 6 && d >= 1 && d <= 5) return "july4";
+  const labor = nthWeekday(y, 8, 1, 1);                              // first Monday of September
+  if (m === 8 && d >= labor - 2 && d <= labor) return "labor";
+  if (m === 10 && d === 11) return "veterans";
+  if (m === 9) return "halloween";
+  if (m === 10) return "thanksgiving";
+  if (m === 11) return "christmas";
+  return null;
+}
+function currentLogo(theme) {
+  if (settings.holidays !== false && !state.holidayPaused) {
+    const h = logoHoliday();
+    if (h) return LOGO_ART[h];
+  }
+  // A holiday look picked by hand gets its matching logo.
+  const fromLook = { newyear: "newyearsday", valentine: "valentine", stpatrick: "stpatrick", easter: "easter",
+                     july4: "july4", halloween: "halloween", thanksgiving: "thanksgiving", christmas: "christmas" }[theme];
+  return LOGO_ART[fromLook] || LOGO_ART.standard;
 }
 
 /* ---------------- Rendering ---------------- */
@@ -1232,9 +1307,11 @@ function render() {
       cells += `<div class="${cls.join(" ")}" style="left:${((a - ws) / wl) * 100}%;width:${((b - a) / wl) * 100}%" data-ch="${i}" data-t="${p.start}" title="${esc(p.title)}${p.sub ? " — " + esc(p.sub) : ""}">` +
         `<div class="in"><span class="t">${esc(p.title)}${tag}</span>${sub ? `<span class="s">${esc(sub)}</span>` : ""}${pb}</div></div>`;
     }
-    const logo = ch.icon ? `<span class="lg"><img src="${esc(ch.icon)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>` : "";
+    const art = channelArt(ch);
+    const logo = art ? `<span class="lg art"><img src="${esc(art)}" alt="${esc(ch.name)}"></span>`
+      : ch.icon ? `<span class="lg"><img src="${esc(ch.icon)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>` : "";
     rows += `<div class="row" data-ch="${i}"><div class="ch${i === state.focus.ch ? " focused" : ""}" data-ch="${i}" title="${esc(ch.number + " " + ch.name)}">` +
-      `<span class="n">${esc(ch.number || "•")}</span>${logo}<span class="nm">${esc(ch.name)}</span></div><div class="progs">${cells}</div></div>`;
+      `<span class="n">${esc(ch.number || "•")}</span>${logo}${art ? "" : `<span class="nm">${esc(ch.name)}</span>`}</div><div class="progs">${cells}</div></div>`;
   });
 
   const inner = $("#rowsInner");
@@ -1272,7 +1349,10 @@ function renderInfo() {
   if (!ch) { el.innerHTML = `<div></div><div class="main"><div class="title">KoWOPTV Guide</div><div class="desc">Loading schedule…</div></div><div></div>`; return; }
   const p = focusedProg();
   const now = Date.now();
-  const chbox = `<div class="chbox">${ch.icon ? `<img src="${esc(ch.icon)}" alt="" onerror="this.remove()">` : ""}<div class="num">${esc(ch.number)}</div><div class="name">${esc(ch.name)}</div></div>`;
+  const art = channelArt(ch);
+  const chbox = art
+    ? `<div class="chbox"><img class="art" src="${esc(art)}" alt="${esc(ch.name)}"><div class="num">${esc(ch.number)}</div></div>`
+    : `<div class="chbox">${ch.icon ? `<img src="${esc(ch.icon)}" alt="" onerror="this.remove()">` : ""}<div class="num">${esc(ch.number)}</div><div class="name">${esc(ch.name)}</div></div>`;
   if (!p) {
     el.innerHTML = `${chbox}<div class="main"><div class="title">No information</div><div class="desc">Nothing is scheduled on ${esc(ch.name)} at this time.</div></div><div class="side"></div>`;
     return;
