@@ -476,12 +476,12 @@ body.theme-christmas .timebar { border-bottom: 5px solid #c8102e;
 
 
 /* ---------- WOPtv logo art ---------- */
-.brand-logo { height: 46px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
+.brand-logo { height: 68px; width: auto; display: block; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
 .ch .lg.art { flex: 1; width: auto; height: calc(var(--rowh) - 8px); min-width: 0; }
 .ch .lg.art img { filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)); }
 .info .chbox .art { max-width: 120px; max-height: 96px; object-fit: contain; }
 @media (max-width: 760px) {
-  .brand-logo { height: 36px; }
+  .brand-logo { height: 46px; }
   .ch .lg.art { display: grid; width: 100%; height: calc(var(--rowh) - 22px); flex: none; }
 }
 
@@ -501,7 +501,7 @@ button, input, select { font: inherit; }
 /* ---------- Top bar ---------- */
 .topbar {
   display: flex; align-items: center; gap: 14px;
-  padding: 8px 16px;
+  padding: 4px 16px;
   background: var(--top-bg); color: var(--top-fg);
   flex: none;
 }
@@ -739,7 +739,7 @@ kbd { background: #eee; border: 1px solid #ccc; border-bottom-width: 2px; border
 <div id="decor" aria-hidden="true"></div>
 <div id="app">
   <header class="topbar">
-    <div class="brand"><img class="brand-logo" id="brandLogo" src="art/logo-standard.png" alt="WOPtv"><span>GUIDE</span></div>
+    <div class="brand"><img class="brand-logo" id="brandLogo" src="art/logo-standard.png" alt="WOPtv Guide"></div>
     <span class="holiday-chip" id="holidayChip"></span>
     <div class="status" id="status">Loading…</div>
     <div class="spacer"></div>
