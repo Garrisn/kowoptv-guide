@@ -1235,9 +1235,6 @@ function render() {
     const logo = ch.icon ? `<span class="lg"><img src="${esc(ch.icon)}" alt="" loading="lazy" onerror="this.parentNode.remove()"></span>` : "";
     rows += `<div class="row" data-ch="${i}"><div class="ch${i === state.focus.ch ? " focused" : ""}" data-ch="${i}" title="${esc(ch.number + " " + ch.name)}">` +
       `<span class="n">${esc(ch.number || "•")}</span>${logo}<span class="nm">${esc(ch.name)}</span></div><div class="progs">${cells}</div></div>`;
-    if (ADS.length && ((i + 1) % 6 === 0 || i === state.channels.length - 1)) {
-      rows += `<div class="row kw-row">${adFrame("grid", "kw-grid")}</div>`;
-    }
   });
 
   const inner = $("#rowsInner");
@@ -1250,6 +1247,8 @@ function render() {
     const box = $("#rows");
     state.dup = settings.autoscroll && inner.scrollHeight > box.clientHeight;
     if (state.dup) inner.innerHTML = rows + rows;
+    // One ad spot, only after the whole channel list (never between channels).
+    if (ADS.length) inner.insertAdjacentHTML("beforeend", `<div class="row kw-row">${adFrame("grid", "kw-grid")}</div>`);
   }
 
   updateNowLine();
